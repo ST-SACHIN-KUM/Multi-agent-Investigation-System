@@ -145,8 +145,6 @@ provider failures converted into fallback reports.
 | --- | --- | --- | --- |
 | 1 | Record provider failures centrally and distinguish completed, blocked, timed-out, and model-error runs | Prevents infrastructure outages from being mistaken for reasoning failures | Requires additional run-status tracking and explicit benchmark denominators |
 | 1 | Add a shared request/token limiter and respect provider retry delays within the global deadline | Reduces bursts and repeated 429 failures; coordinates requests across agents | Adds waiting time and may reduce parallelism |
-| 1 | Report both end-to-end success and accuracy among completed runs, with completion counts | Makes reliability visible without hiding failures or overstating reasoning quality | More than one headline number is required |
-| 1 | Constrain cause categories with a shared enum/schema; define allowed aliases before evaluation | Avoids SYN-005-style label mismatches while preserving strict reproducible scoring | A fixed taxonomy may omit valid mechanisms; aliases must not be chosen after seeing scores |
 | 1 | Replace Critic failure's `approve` fallback with `review_unavailable` and preserve that status in Reporting | Prevents failed review from being labeled approval | More runs may correctly remain inconclusive |
 | 2 | Enforce evidence sufficiency and unresolved critical-review issues before a conclusive report | Confidence alone cannot establish a cause | Conservative checks can lower completion or conclusive-answer rates |
 | 2 | Give the single agent bounded, structured evidence summaries and retain raw records by reference | Controls growth from resending all raw observations | Summaries can omit decisive evidence; keep references and a way to fetch details |
@@ -154,7 +152,6 @@ provider failures converted into fallback reports.
 | 2 | Reserve a reporting budget and checkpoint hypotheses during investigation | Produces a useful partial report before the global deadline | Leaves less time for evidence collection and requires persistence logic |
 | 2 | Validate the full task plan before scheduling: schemas, dependency references, cycles, and parameters | Current planning can silently drop forward dependency references | Additional validation and plan-repair code |
 | 2 | Add human-reviewed claim-to-evidence labels or an independent grounding evaluator | Measures whether evidence supports claims rather than just whether IDs exist | Human review costs time; an LLM judge adds cost and can introduce bias |
-| 3 | Repeat all twelve cases across multiple seeds and alternate architecture order | Estimates variability and reduces single-run/order effects | Additional provider time and token usage |
 | 3 | Move mutable multi-agent run state into a per-investigation context and persist checkpoints | Supports concurrent incidents and recovery | More storage, coordination, and cleanup complexity |
 
 For token accounting, record usage at each provider response, including malformed

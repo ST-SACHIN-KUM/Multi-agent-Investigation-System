@@ -143,14 +143,11 @@ provider failures converted into fallback reports.
 
 | Priority | Change | Why it helps | Trade-off |
 | --- | --- | --- | --- |
-| 1 | Add a shared request/token limiter and respect provider retry delays within the global deadline | Reduces bursts and repeated 429 failures; coordinates requests across agents | Adds waiting time and may reduce parallelism |
 | 1 | Replace Critic failure's `approve` fallback with `review_unavailable` and preserve that status in Reporting | Prevents failed review from being labeled approval | More runs may correctly remain inconclusive |
-| 2 | Enforce evidence sufficiency and unresolved critical-review issues before a conclusive report | Confidence alone cannot establish a cause | Conservative checks can lower completion or conclusive-answer rates |
 | 2 | Give the single agent bounded, structured evidence summaries and retain raw records by reference | Controls growth from resending all raw observations | Summaries can omit decisive evidence; keep references and a way to fetch details |
-| 2 | Detect repeated identical queries; require a reason and an evidence gap for re-querying | Prevents long loops that gather no new information | Must allow legitimate retries after partial or failed results |
-| 2 | Reserve a reporting budget and checkpoint hypotheses during investigation | Produces a useful partial report before the global deadline | Leaves less time for evidence collection and requires persistence logic |
-| 2 | Validate the full task plan before scheduling: schemas, dependency references, cycles, and parameters | Current planning can silently drop forward dependency references | Additional validation and plan-repair code |
-| 2 | Add human-reviewed claim-to-evidence labels or an independent grounding evaluator | Measures whether evidence supports claims rather than just whether IDs exist | Human review costs time; an LLM judge adds cost and can introduce bias |
+| 3 | Detect repeated identical queries; require a reason and an evidence gap for re-querying | Prevents long loops that gather no new information | Must allow legitimate retries after partial or failed results |
+| 4 | Validate the full task plan before scheduling: schemas, dependency references, cycles, and parameters | Current planning can silently drop forward dependency references | Additional validation and plan-repair code |
+| 5 | Add human-reviewed claim-to-evidence labels or an independent grounding evaluator | Measures whether evidence supports claims rather than just whether IDs exist | Human review costs time; an LLM judge adds cost and can introduce bias |
 
 For token accounting, record usage at each provider response, including malformed
 outputs, and mark unknown usage on requests canceled before usage arrives. Do not

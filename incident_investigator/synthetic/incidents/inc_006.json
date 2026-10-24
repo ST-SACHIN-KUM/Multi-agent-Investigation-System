@@ -1,0 +1,982 @@
+{
+  "incident": {
+    "id": "SYN-006",
+    "title": "Payment failures despite healthy status probes",
+    "reported_at": 100,
+    "affected_service": "checkout-api",
+    "description": "Customers report slow or failed checkout requests. Investigate the available evidence."
+  },
+  "world": {
+    "services": {
+      "checkout-api": {
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      },
+      "payment-service": {
+        "depends_on": [
+          "postgres-primary"
+        ]
+      },
+      "recommendation-service": {
+        "depends_on": [
+          "redis-cache"
+        ]
+      },
+      "postgres-primary": {
+        "depends_on": []
+      },
+      "redis-cache": {
+        "depends_on": []
+      }
+    },
+    "logs": [
+      {
+        "ts": 46,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 48,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 52,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 54,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 56,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 58,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 60,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 62,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 64,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 66,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 68,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 70,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 72,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 74,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 76,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 78,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 80,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 82,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 84,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 86,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 88,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 90,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 92,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 94,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 96,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 98,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection refused at newly configured host"
+      },
+      {
+        "ts": 56,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 58,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 62,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 64,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 66,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 68,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 72,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 74,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 76,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 78,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 82,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 84,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 86,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 88,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 92,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 94,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 96,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 98,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 46,
+        "service": "payment-service",
+        "level": "WARN",
+        "message": "health probe HTTP 200; probe checks process only, not database connectivity"
+      }
+    ],
+    "metrics": [
+      {
+        "ts": 0,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 303.79
+      },
+      {
+        "ts": 5,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 307.22
+      },
+      {
+        "ts": 10,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 291.3
+      },
+      {
+        "ts": 15,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 307.96
+      },
+      {
+        "ts": 20,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 305.78
+      },
+      {
+        "ts": 25,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 292.02
+      },
+      {
+        "ts": 30,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 305.51
+      },
+      {
+        "ts": 35,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 305.48
+      },
+      {
+        "ts": 40,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 294.38
+      },
+      {
+        "ts": 45,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 308.48
+      },
+      {
+        "ts": 50,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 297.55
+      },
+      {
+        "ts": 55,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 0,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.91
+      },
+      {
+        "ts": 5,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 122.27
+      },
+      {
+        "ts": 10,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.69
+      },
+      {
+        "ts": 15,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.52
+      },
+      {
+        "ts": 20,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 116.67
+      },
+      {
+        "ts": 25,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.71
+      },
+      {
+        "ts": 30,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.12
+      },
+      {
+        "ts": 35,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.71
+      },
+      {
+        "ts": 40,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.77
+      },
+      {
+        "ts": 45,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 55,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 0,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 78.23
+      },
+      {
+        "ts": 5,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 78.89
+      },
+      {
+        "ts": 10,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 78.23
+      },
+      {
+        "ts": 15,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.58
+      },
+      {
+        "ts": 20,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 82.18
+      },
+      {
+        "ts": 25,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.28
+      },
+      {
+        "ts": 30,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 82.18
+      },
+      {
+        "ts": 35,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.24
+      },
+      {
+        "ts": 40,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.77
+      },
+      {
+        "ts": 45,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.45
+      },
+      {
+        "ts": 50,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.73
+      },
+      {
+        "ts": 55,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 78.75
+      },
+      {
+        "ts": 60,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.11
+      },
+      {
+        "ts": 65,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.47
+      },
+      {
+        "ts": 70,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.81
+      },
+      {
+        "ts": 75,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.78
+      },
+      {
+        "ts": 80,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.76
+      },
+      {
+        "ts": 85,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 78.27
+      },
+      {
+        "ts": 90,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.45
+      },
+      {
+        "ts": 95,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.11
+      },
+      {
+        "ts": 100,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.18
+      },
+      {
+        "ts": 0,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.09
+      },
+      {
+        "ts": 5,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.15
+      },
+      {
+        "ts": 10,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.08
+      },
+      {
+        "ts": 15,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.46
+      },
+      {
+        "ts": 20,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.99
+      },
+      {
+        "ts": 25,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.48
+      },
+      {
+        "ts": 30,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.1
+      },
+      {
+        "ts": 35,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.68
+      },
+      {
+        "ts": 40,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.4
+      },
+      {
+        "ts": 45,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.7
+      },
+      {
+        "ts": 50,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.52
+      },
+      {
+        "ts": 55,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.19
+      },
+      {
+        "ts": 60,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.42
+      },
+      {
+        "ts": 65,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.57
+      },
+      {
+        "ts": 70,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.6
+      },
+      {
+        "ts": 75,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.29
+      },
+      {
+        "ts": 80,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.09
+      },
+      {
+        "ts": 85,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.49
+      },
+      {
+        "ts": 90,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.6
+      },
+      {
+        "ts": 95,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.76
+      },
+      {
+        "ts": 100,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.53
+      },
+      {
+        "ts": 0,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.73
+      },
+      {
+        "ts": 5,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.04
+      },
+      {
+        "ts": 10,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.78
+      },
+      {
+        "ts": 15,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.6
+      },
+      {
+        "ts": 20,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.21
+      },
+      {
+        "ts": 25,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.76
+      },
+      {
+        "ts": 30,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.71
+      },
+      {
+        "ts": 35,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.39
+      },
+      {
+        "ts": 40,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 97.78
+      },
+      {
+        "ts": 45,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.93
+      },
+      {
+        "ts": 50,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.78
+      },
+      {
+        "ts": 55,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.11
+      },
+      {
+        "ts": 60,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.6
+      },
+      {
+        "ts": 65,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.18
+      },
+      {
+        "ts": 70,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.05
+      },
+      {
+        "ts": 75,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.96
+      },
+      {
+        "ts": 80,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.16
+      },
+      {
+        "ts": 85,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.18
+      },
+      {
+        "ts": 90,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.98
+      },
+      {
+        "ts": 95,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.0
+      },
+      {
+        "ts": 100,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.5
+      }
+    ],
+    "deployments": [
+      {
+        "ts": 40,
+        "service": "payment-service",
+        "type": "config",
+        "version": "v-40",
+        "description": "Set database endpoint to an unreachable host"
+      }
+    ],
+    "past_incidents": []
+  },
+  "failures": {
+    "seed": 106
+  }
+}

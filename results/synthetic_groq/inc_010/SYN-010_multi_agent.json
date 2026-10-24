@@ -1,0 +1,320 @@
+{
+  "metrics": {
+    "incident_id": "SYN-010",
+    "architecture": "multi_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive",
+    "expected_service": "postgres-primary",
+    "expected_category": "resource_exhaustion",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 15,
+    "llm_calls": 6,
+    "input_tokens": 1829,
+    "output_tokens": 1245,
+    "latency_s": 52.3579,
+    "termination_reason": "critic_approved",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 15,
+    "token_consumption": 3074,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "critic_approved",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive"
+  },
+  "ground_truth": {
+    "service": "postgres-primary",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Database CPU saturation starts first, causing payment query timeouts and then checkout failures along the dependency path, as in SYN-001. Logs are unavailable, so use metric onset timing and topology and preserve uncertainty from truncated results.",
+    "causal_timeline": [
+      "30: database CPU saturation",
+      "40: payment query timeouts",
+      "50: checkout timeouts",
+      "55: unrelated recommendation release"
+    ],
+    "misleading_evidence": [
+      "Recommendation deployment occurs after the symptoms and its metrics remain healthy."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [
+      "Log queries always time out; some other tool responses are truncated."
+    ],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "inconclusive",
+    "summary": "The investigation is inconclusive due to a complete lack of evidence. No hypotheses could be formed, and the absence of a critic meant no conclusions were challenged. The process terminated via critic approval despite the lack of data.",
+    "hypotheses": [],
+    "facts": [],
+    "assumptions": [],
+    "open_issues": [
+      "Critic unavailable: conclusions were not challenged",
+      "No hypotheses could be formed from the evidence"
+    ],
+    "recommended_actions": [
+      "Collect and document relevant evidence to support future analysis.",
+      "Ensure a critic or review mechanism is available to challenge conclusions.",
+      "Develop hypotheses based on available data before proceeding to termination."
+    ],
+    "termination_reason": "critic_approved",
+    "stats": {
+      "termination_reason": "critic_approved",
+      "rounds": 0,
+      "tool_calls": 15,
+      "llm_calls": 6,
+      "input_tokens": 1829,
+      "output_tokens": 1245,
+      "latency_s": 52.357,
+      "ungrounded_citations": 0,
+      "tasks": {
+        "done": 4,
+        "failed": 1,
+        "skipped": 0
+      }
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": "T2",
+      "source": "observability",
+      "content": "query_logs(checkout-api) failed after 3 attempts (query_logs timed out); data unavailable",
+      "kind": "fact",
+      "category": "gap",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": "T1",
+      "source": "dependency",
+      "content": "checkout-api depends on payment-service and recommendation-service.",
+      "kind": "fact",
+      "category": "topology",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "service": "checkout-api",
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ],
+        "depended_on_by": [],
+        "neighbors": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms baseline is stable between ~292 and ~308 ms from ts 0 to ts 45.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "checkout-api",
+      "ts": 0,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "min": 292.35,
+        "max": 307.82
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms jumps to a sustained 2500 ms starting at ts 50 and remains at 2500 ms through ts 100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 50,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "baseline_avg": 298.5,
+        "onset_value": 2500,
+        "sustained": true
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "The constant 2500 ms value from ts 50 onward may indicate a metric cap/timeout rather than true latency; treat as a limitation.",
+      "kind": "assumption",
+      "category": "error_log",
+      "service": "checkout-api",
+      "ts": 50,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "possible_cause": "metric_cap_or_timeout"
+      }
+    },
+    {
+      "id": "E6",
+      "task_id": "T2",
+      "source": "observability",
+      "content": "Log query for checkout-api (range 0-100) failed; no data returned.",
+      "kind": "fact",
+      "category": "error_log",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "completeness": "failed",
+        "rows": 0
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "query_logs(payment-service) failed after 3 attempts (query_logs timed out); data unavailable",
+      "kind": "fact",
+      "category": "gap",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E8",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "query_logs(recommendation-service) failed after 3 attempts (query_logs timed out); data unavailable",
+      "kind": "fact",
+      "category": "gap",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E9",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "query_metrics(payment-service) returned truncated results; counts and onsets are lower bounds",
+      "kind": "fact",
+      "category": "gap",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "E10",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "query_metrics(recommendation-service) returned truncated results; counts and onsets are lower bounds",
+      "kind": "fact",
+      "category": "gap",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "E11",
+      "task_id": "T5",
+      "source": "orchestrator",
+      "content": "Task scan_metrics {'neighbors_of': 'checkout-api', 'start': 0, 'end': 100} failed after 2 attempts; evidence missing",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E12",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "Log retrieval for payment-service failed; no data available.",
+      "kind": "fact",
+      "category": "error_log",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E13",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "Log retrieval for recommendation-service failed; no data available.",
+      "kind": "fact",
+      "category": "error_log",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E14",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "Analysis of neighbors for checkout-api is limited due to failed data retrieval for both queried services.",
+      "kind": "assumption",
+      "category": "stable",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "limitation": "truncated_data"
+      }
+    }
+  ],
+  "events": [
+    "[  2.10s r0] plan: [('T1', 'topology', []), ('T2', 'scan_logs', []), ('T3', 'scan_metrics', []), ('T4', 'scan_logs', ['T1']), ('T5', 'scan_metrics', ['T1'])]",
+    "[  2.10s r0] running in parallel: ['T1:topology', 'T2:scan_logs', 'T3:scan_metrics']",
+    "[  2.10s r0] observability: query_logs(checkout-api) attempt 1 failed: query_logs timed out",
+    "[  2.16s r0] observability: query_logs(checkout-api) attempt 2 failed: query_logs timed out",
+    "[  2.18s r0] observability: query_logs(checkout-api) attempt 3 failed: query_logs timed out",
+    "[ 32.60s r0] running in parallel: ['T4:scan_logs', 'T5:scan_metrics']",
+    "[ 32.60s r0] observability: query_logs(payment-service) attempt 1 failed: query_logs timed out",
+    "[ 32.60s r0] observability: query_logs(recommendation-service) attempt 1 failed: query_logs timed out",
+    "[ 32.65s r0] observability: query_logs(payment-service) attempt 2 failed: query_logs timed out",
+    "[ 32.65s r0] observability: query_logs(recommendation-service) attempt 2 failed: query_logs timed out",
+    "[ 32.71s r0] observability: query_logs(payment-service) attempt 3 failed: query_logs timed out",
+    "[ 32.71s r0] observability: query_logs(recommendation-service) attempt 3 failed: query_logs timed out",
+    "[ 32.76s r0] T5 (scan_metrics) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5qhdx05etmbz1pdqk7eaw2h` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199397, Requested 2223. Please try again in 11m39.839999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[ 33.11s r0] T5 (scan_metrics) attempt 2 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5qhdx05etmbz1pdqk7eaw2h` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199396, Requested 1027. Please try again in 3m2.736s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[ 33.83s r0] reasoning FAILED (RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5qhdx05etmbz1pdqk7eaw2h` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199723, Requested 2227. Please try again in 14m2.4s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}); keeping previous hypotheses",
+    "[ 34.01s r0] critic FAILED (RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5qhdx05etmbz1pdqk7eaw2h` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199722, Requested 2219. Please try again in 13m58.512s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}); terminating with caveat",
+    "[ 34.01s r0] critic: approve; issues=1 requests=0"
+  ]
+}

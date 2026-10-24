@@ -1,0 +1,806 @@
+{
+  "metrics": {
+    "incident_id": "SYN-009",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified",
+    "expected_service": "payment-service",
+    "expected_category": "bad_deploy",
+    "predicted_service": "payment-service",
+    "predicted_category": "bad_deploy",
+    "confidence": 0.95,
+    "root_cause_eligible": true,
+    "root_cause_correct": true,
+    "outcome_correct": true,
+    "case_success": true,
+    "valid_citations": 4,
+    "invalid_citations": 0,
+    "citation_validity": 1.0,
+    "tool_calls": 21,
+    "llm_calls": 14,
+    "input_tokens": 34682,
+    "output_tokens": 1154,
+    "latency_s": 292.0785,
+    "termination_reason": "agent_finished",
+    "error": null,
+    "root_cause_accuracy": 1,
+    "evidence_grounding": 1.0,
+    "tool_call_count": 21,
+    "token_consumption": 35836,
+    "ground_truth_accuracy": 1
+  },
+  "diagnostics": {
+    "termination_reason": "agent_finished",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified"
+  },
+  "ground_truth": {
+    "service": "payment-service",
+    "category": "bad_deploy",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Payment handler release exhausts the connection pool, preceding downstream checkout degradation.",
+    "causal_timeline": [
+      "40: payment handler release",
+      "45: payment degradation",
+      "55: checkout degradation"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [],
+    "tool_failures": [
+      "Seeded transient timeouts can affect any query; successful retries provide evidence."
+    ],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "root_cause_identified",
+    "summary": "The checkout failures are caused by a bad deploy to payment-service (v-40 at ts=40) that exhausts the database connection pool. This began at ts=46, causing payment-service to become unresponsive, which in turn caused upstream timeout errors in checkout-api starting at ts=56. The temporal sequence (deploy at 40 -> pool exhaustion at 46 -> checkout timeouts at 56) and the dependency path (checkout-api -> payment-service -> postgres-primary) strongly support this causal chain. Telemetry for payment-service metrics is unavailable (empty responses), but the log evidence is consistent and complete.",
+    "hypotheses": [
+      {
+        "id": "H1",
+        "statement": "A bad deploy to payment-service (v-40) introduced a handler that exhausts the database connection pool, causing payment-service to time out and subsequently causing checkout-api failures.",
+        "category": "bad_deploy",
+        "service": "payment-service",
+        "confidence": 0.95,
+        "supporting": [
+          "E1",
+          "E2",
+          "E3",
+          "E8"
+        ],
+        "contradicting": [],
+        "assumptions": [
+          "The deploy description accurately reflects the code change",
+          "No other concurrent changes affected payment-service or postgres-primary"
+        ]
+      }
+    ],
+    "facts": [
+      "E1",
+      "E2",
+      "E3",
+      "E8"
+    ],
+    "assumptions": [
+      "The deploy description accurately reflects the code change",
+      "No other concurrent changes affected payment-service or postgres-primary"
+    ],
+    "open_issues": [
+      "E4: query_metrics returned empty data",
+      "E5: query_metrics returned empty data",
+      "E6: query_metrics returned empty data",
+      "E7: get_deployments returned empty data",
+      "E9: query_logs returned empty data",
+      "E10: query_metrics returned empty data",
+      "E11: query_logs returned empty data",
+      "E12: query_metrics returned empty data",
+      "E13: search_past_incidents returned empty data",
+      "Payment-service metrics (db_connection_pool_utilization, db_pool_active_connections, request_latency_p99, db_pool_size) are unavailable, preventing quantitative confirmation of pool exhaustion",
+      "Postgres-primary logs are empty at both WARN and INFO levels, which is unusual but may indicate healthy DB or telemetry gap"
+    ],
+    "recommended_actions": [
+      "Rollback payment-service to the previous stable version (pre-v-40)",
+      "Investigate and fix the connection pool leak in the payment handler code before redeploying",
+      "Add monitoring and alerting for database connection pool utilization on payment-service",
+      "Review the deploy process to include connection pool stress testing"
+    ],
+    "termination_reason": "agent_finished",
+    "stats": {
+      "termination_reason": "agent_finished",
+      "decision_steps": 14,
+      "tool_calls": 21,
+      "llm_calls": 14,
+      "input_tokens": 34682,
+      "output_tokens": 1154,
+      "latency_s": 292.072,
+      "ungrounded_citations": 0
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 1: query_logs {'service': 'checkout-api', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 56,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 58,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 60,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 62,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 64,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 66,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 68,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 70,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 72,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 74,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 76,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 78,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 80,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 82,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 84,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 86,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 88,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 90,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 92,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 94,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 96,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 98,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 2
+        }
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 2: query_logs {'service': 'payment-service', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 46,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 48,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 50,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 52,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 54,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 56,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 58,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 60,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 62,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 64,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 66,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 68,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 70,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 72,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 74,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 76,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 78,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 80,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 82,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 84,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 86,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 88,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 90,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 92,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 94,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 96,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            },
+            {
+              "ts": 98,
+              "service": "payment-service",
+              "level": "ERROR",
+              "message": "database connection pool exhausted after handler release"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 3
+        }
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 3: get_deployments {'service': 'payment-service', 'start': 0, 'end': 100}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "get_deployments",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100
+        },
+        "result": {
+          "tool": "get_deployments",
+          "ok": true,
+          "data": [
+            {
+              "ts": 40,
+              "service": "payment-service",
+              "type": "deploy",
+              "version": "v-40",
+              "description": "Release payment handler that exhausts the connection pool"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 2
+        }
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 4: query_metrics {'service': 'payment-service', 'start': 0, 'end': 100, 'metric': 'db_connection_pool_utilization'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100,
+          "metric": "db_connection_pool_utilization"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 5: query_metrics {'service': 'payment-service', 'start': 0, 'end': 100, 'metric': 'db_connection_pool_utilization'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100,
+          "metric": "db_connection_pool_utilization"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E6",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 6: query_metrics {'service': 'payment-service', 'start': 0, 'end': 100, 'metric': 'db_pool_active_connections'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100,
+          "metric": "db_pool_active_connections"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 3
+        }
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 7: get_deployments {'service': 'checkout-api', 'start': 0, 'end': 100}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "get_deployments",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100
+        },
+        "result": {
+          "tool": "get_deployments",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E8",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 8: get_dependencies {'service': 'payment-service'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "get_dependencies",
+        "args": {
+          "service": "payment-service"
+        },
+        "result": {
+          "tool": "get_dependencies",
+          "ok": true,
+          "data": [
+            {
+              "service": "postgres-primary",
+              "relation": "depends_on"
+            },
+            {
+              "service": "checkout-api",
+              "relation": "depended_on_by"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E9",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 9: query_logs {'service': 'postgres-primary', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "postgres-primary",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "postgres-primary",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E10",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 10: query_metrics {'service': 'payment-service', 'start': 0, 'end': 100, 'metric': 'request_latency_p99'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100,
+          "metric": "request_latency_p99"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E11",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 11: query_logs {'service': 'postgres-primary', 'start': 0, 'end': 100, 'min_level': 'INFO', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "postgres-primary",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "postgres-primary",
+          "start": 0,
+          "end": 100,
+          "min_level": "INFO",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E12",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 12: query_metrics {'service': 'payment-service', 'start': 0, 'end': 100, 'metric': 'db_pool_size'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100,
+          "metric": "db_pool_size"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E13",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 13: search_past_incidents {'keywords': ['connection pool exhausted', 'payment-service', 'handler release'], 'limit': 3}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "search_past_incidents",
+        "args": {
+          "keywords": [
+            "connection pool exhausted",
+            "payment-service",
+            "handler release"
+          ],
+          "limit": 3
+        },
+        "result": {
+          "tool": "search_past_incidents",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 3
+        }
+      }
+    }
+  ],
+  "events": [
+    "[ 15.96s r0] E1: query_logs -> full",
+    "[ 26.58s r1] E2: query_logs -> full",
+    "[ 27.60s r2] E3: get_deployments -> full",
+    "[ 28.51s r3] E4: query_metrics -> empty",
+    "[ 49.91s r4] E5: query_metrics -> empty",
+    "[ 68.34s r5] E6: query_metrics -> empty",
+    "[ 93.00s r6] E7: get_deployments -> empty",
+    "[147.90s r7] E8: get_dependencies -> full",
+    "[161.10s r8] E9: query_logs -> empty",
+    "[185.17s r9] E10: query_metrics -> empty",
+    "[210.66s r10] E11: query_logs -> empty",
+    "[237.40s r11] E12: query_metrics -> empty",
+    "[263.93s r12] E13: search_past_incidents -> empty"
+  ]
+}

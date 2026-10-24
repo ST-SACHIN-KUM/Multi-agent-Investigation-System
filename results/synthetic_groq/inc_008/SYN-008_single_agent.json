@@ -1,0 +1,1052 @@
+{
+  "metrics": {
+    "incident_id": "SYN-008",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive",
+    "expected_service": "redis-cache",
+    "expected_category": "resource_exhaustion",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 17,
+    "llm_calls": 17,
+    "input_tokens": 46824,
+    "output_tokens": 1098,
+    "latency_s": 385.2464,
+    "termination_reason": "llm_failed",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 17,
+    "token_consumption": 47922,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "llm_failed",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive"
+  },
+  "ground_truth": {
+    "service": "redis-cache",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Cache memory exhaustion causes sustained evictions and a falling hit rate, degrading recommendations and then checkout; database and payment metrics remain healthy.",
+    "causal_timeline": [
+      "40: cache hit rate collapses",
+      "50: recommendations degrade",
+      "60: checkout timeouts",
+      "65: unrelated checkout release"
+    ],
+    "misleading_evidence": [
+      "Keyword-matching historical database incident contradicts healthy current database measurements.",
+      "Checkout deployment occurs after the symptoms and cannot explain their onset."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "inconclusive",
+    "summary": "Inconclusive. Investigation stopped before a final answer; review collected observations.",
+    "hypotheses": [],
+    "facts": [],
+    "assumptions": [],
+    "open_issues": [
+      "Single-agent decision failed: RateLimitError",
+      "Evidence or hypothesis separation is insufficient for a conclusive result",
+      "E2: query_metrics returned empty data",
+      "E3: query_metrics returned empty data",
+      "E4: query_metrics returned empty data",
+      "E5: query_metrics returned empty data",
+      "E9: query_metrics returned empty data",
+      "E10: get_deployments returned empty data",
+      "E11: get_deployments returned empty data",
+      "E13: query_metrics returned empty data",
+      "E14: query_metrics returned empty data",
+      "E16: query_logs returned empty data",
+      "E17: search_past_incidents returned empty data"
+    ],
+    "recommended_actions": [
+      "Review missing evidence with the service owner"
+    ],
+    "termination_reason": "llm_failed",
+    "stats": {
+      "termination_reason": "llm_failed",
+      "decision_steps": 18,
+      "tool_calls": 17,
+      "llm_calls": 17,
+      "input_tokens": 46824,
+      "output_tokens": 1098,
+      "latency_s": 385.245,
+      "ungrounded_citations": 0
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 1: query_logs {'service': 'checkout-api', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 61,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 63,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 65,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 67,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 69,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 71,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 73,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 75,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 77,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 79,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 81,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 83,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 85,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 87,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 89,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 91,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 93,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 95,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 97,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            },
+            {
+              "ts": 99,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream recommendation-service timeout"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 2: query_metrics {'service': 'checkout-api', 'start': 0, 'end': 100, 'metric': 'memory_usage'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "metric": "memory_usage"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 3: query_metrics {'service': 'checkout-api', 'start': 0, 'end': 100, 'metric': 'latency_p99'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "metric": "latency_p99"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 4: query_metrics {'service': 'checkout-api', 'start': 0, 'end': 100, 'metric': 'memory'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "metric": "memory"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 5: query_metrics {'service': 'checkout-api', 'start': 0, 'end': 100, 'metric': 'latency'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "metric": "latency"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E6",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 6: get_dependencies {'service': 'checkout-api'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "get_dependencies",
+        "args": {
+          "service": "checkout-api"
+        },
+        "result": {
+          "tool": "get_dependencies",
+          "ok": true,
+          "data": [
+            {
+              "service": "payment-service",
+              "relation": "depends_on"
+            },
+            {
+              "service": "recommendation-service",
+              "relation": "depends_on"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 7: query_logs {'service': 'recommendation-service', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "recommendation-service",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 51,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 53,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 55,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 57,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 59,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 61,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 63,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 65,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 67,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 69,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 71,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 73,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 75,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 77,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 79,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 81,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 83,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 85,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 87,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 89,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 91,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 93,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 95,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 97,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            },
+            {
+              "ts": 99,
+              "service": "recommendation-service",
+              "level": "ERROR",
+              "message": "upstream redis-cache timeout"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E8",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 8: query_logs {'service': 'redis-cache', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "redis-cache",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 41,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 43,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 45,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 47,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 49,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 51,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 53,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 55,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 57,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 59,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 61,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 63,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 65,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 67,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 69,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 71,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 73,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 75,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 77,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 79,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 81,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 83,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 85,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 87,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 89,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 91,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 93,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 95,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 97,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            },
+            {
+              "ts": 99,
+              "service": "redis-cache",
+              "level": "ERROR",
+              "message": "memory exhausted; continuous cache eviction storm"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E9",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 9: query_metrics {'service': 'redis-cache', 'start': 0, 'end': 100, 'metric': 'memory_usage'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "redis-cache",
+          "start": 0,
+          "end": 100,
+          "metric": "memory_usage"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E10",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 10: get_deployments {'service': 'redis-cache', 'start': 0, 'end': 100}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "tool": "get_deployments",
+        "args": {
+          "service": "redis-cache",
+          "start": 0,
+          "end": 100
+        },
+        "result": {
+          "tool": "get_deployments",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E11",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 11: get_deployments {'service': 'recommendation-service', 'start': 0, 'end': 100}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "tool": "get_deployments",
+        "args": {
+          "service": "recommendation-service",
+          "start": 0,
+          "end": 100
+        },
+        "result": {
+          "tool": "get_deployments",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E12",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 12: get_deployments {'service': 'checkout-api', 'start': 0, 'end': 100}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "get_deployments",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100
+        },
+        "result": {
+          "tool": "get_deployments",
+          "ok": true,
+          "data": [
+            {
+              "ts": 65,
+              "service": "checkout-api",
+              "type": "deploy",
+              "version": "v-65",
+              "description": "Refresh checkout response labels"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E13",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 13: query_metrics {'service': 'redis-cache', 'start': 0, 'end': 100, 'metric': 'memory'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "redis-cache",
+          "start": 0,
+          "end": 100,
+          "metric": "memory"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E14",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 14: query_metrics {'service': 'redis-cache', 'start': 0, 'end': 100, 'metric': 'evictions'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "redis-cache",
+          "start": 0,
+          "end": 100,
+          "metric": "evictions"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E15",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 15: get_dependencies {'service': 'redis-cache'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "tool": "get_dependencies",
+        "args": {
+          "service": "redis-cache"
+        },
+        "result": {
+          "tool": "get_dependencies",
+          "ok": true,
+          "data": [
+            {
+              "service": "recommendation-service",
+              "relation": "depended_on_by"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E16",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 16: query_logs {'service': 'redis-cache', 'start': 0, 'end': 40, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "redis-cache",
+          "start": 0,
+          "end": 40,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E17",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 17: search_past_incidents {'keywords': ['redis', 'memory', 'exhaustion', 'cache', 'eviction'], 'limit': 3}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "search_past_incidents",
+        "args": {
+          "keywords": [
+            "redis",
+            "memory",
+            "exhaustion",
+            "cache",
+            "eviction"
+          ],
+          "limit": 3
+        },
+        "result": {
+          "tool": "search_past_incidents",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    }
+  ],
+  "events": [
+    "[ 16.13s r0] E1: query_logs -> full",
+    "[ 23.90s r1] E2: query_metrics -> empty",
+    "[ 24.42s r2] E3: query_metrics -> empty",
+    "[ 26.06s r3] E4: query_metrics -> empty",
+    "[ 29.74s r4] E5: query_metrics -> empty",
+    "[ 32.61s r5] E6: get_dependencies -> full",
+    "[ 38.54s r6] E7: query_logs -> full",
+    "[ 90.77s r7] E8: query_logs -> full",
+    "[112.47s r8] E9: query_metrics -> empty",
+    "[143.71s r9] E10: get_deployments -> empty",
+    "[174.94s r10] E11: get_deployments -> empty",
+    "[208.22s r11] E12: get_deployments -> full",
+    "[241.61s r12] E13: query_metrics -> empty",
+    "[276.10s r13] E14: query_metrics -> empty",
+    "[311.96s r14] E15: get_dependencies -> full",
+    "[347.40s r15] E16: query_logs -> empty",
+    "[384.66s r16] E17: search_past_incidents -> empty"
+  ]
+}

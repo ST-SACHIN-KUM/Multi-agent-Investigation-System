@@ -1,0 +1,338 @@
+{
+  "metrics": {
+    "incident_id": "SYN-005",
+    "architecture": "multi_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified",
+    "expected_service": "payment-service",
+    "expected_category": "dependency_failure",
+    "predicted_service": "payment-service",
+    "predicted_category": "external_dependency_failure",
+    "confidence": 0.95,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": true,
+    "case_success": false,
+    "valid_citations": 12,
+    "invalid_citations": 0,
+    "citation_validity": 1.0,
+    "tool_calls": 7,
+    "llm_calls": 9,
+    "input_tokens": 10428,
+    "output_tokens": 2579,
+    "latency_s": 117.4021,
+    "termination_reason": "critic_approved",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": 1.0,
+    "tool_call_count": 7,
+    "token_consumption": 13007,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "critic_approved",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified"
+  },
+  "ground_truth": {
+    "service": "payment-service",
+    "category": "dependency_failure",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Payment gateway TLS certificate expiration breaks payment connectivity; normal CPU does not rule this out.",
+    "causal_timeline": [
+      "40: payment TLS failures",
+      "50: checkout failures"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [
+      "Payment CPU remains normal while connection errors and latency increase; these measure different failure modes."
+    ],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "root_cause_identified",
+    "summary": "An incident occurred where checkout-api experienced sustained timeouts and latency spikes (reaching a 2500ms ceiling) starting at ts=50. The root cause was identified as an expired TLS certificate on the external payment gateway, which caused payment-service to fail TLS connections starting at ts=41. This failure led to payment-service latency saturating at 2500ms at ts=40, subsequently causing upstream timeouts in checkout-api. The 10-second lag between payment-service saturation and checkout-api errors is consistent with retry logic or connection pool exhaustion. Recommendation-service was ruled out as a cause due to stable latency metrics, despite a telemetry gap in its logs.",
+    "hypotheses": [
+      {
+        "id": "H1",
+        "statement": "Expired TLS certificate on the external payment gateway caused payment-service to fail, leading to timeouts in checkout-api.",
+        "category": "external_dependency_failure",
+        "service": "payment-service",
+        "confidence": 0.95,
+        "supporting": [
+          "E7",
+          "E9",
+          "E5",
+          "E3",
+          "E1"
+        ],
+        "contradicting": [],
+        "assumptions": [
+          "The external payment gateway is a critical dependency for payment-service.",
+          "The TLS failure directly causes the latency spike and subsequent timeouts."
+        ]
+      },
+      {
+        "id": "H2",
+        "statement": "A resource exhaustion issue in payment-service caused the latency spike, though CPU metrics appear stable.",
+        "category": "resource_exhaustion",
+        "service": "payment-service",
+        "confidence": 0.1,
+        "supporting": [
+          "E9"
+        ],
+        "contradicting": [
+          "E10",
+          "E7"
+        ],
+        "assumptions": [
+          "CPU is not the only relevant resource metric (e.g., memory, disk I/O, or network saturation could be factors)."
+        ]
+      },
+      {
+        "id": "H3",
+        "statement": "recommendation-service degradation caused checkout-api failures.",
+        "category": "dependency_failure",
+        "service": "recommendation-service",
+        "confidence": 0.05,
+        "supporting": [
+          "E1"
+        ],
+        "contradicting": [
+          "E11",
+          "E6",
+          "E8"
+        ],
+        "assumptions": [
+          "The lack of logs for recommendation-service indicates a silent failure or telemetry gap that masks a real issue."
+        ]
+      }
+    ],
+    "facts": [
+      "E7",
+      "E9",
+      "E5",
+      "E3",
+      "E1"
+    ],
+    "assumptions": [
+      "The external payment gateway is a critical dependency for payment-service.",
+      "The TLS failure directly causes the latency spike and subsequent timeouts."
+    ],
+    "open_issues": [
+      "The 2500ms latency value is explicitly flagged as a potential timeout or metric saturation (E4), meaning the 'latency spike' is likely a symptom of the TLS failure rather than a distinct performance issue.",
+      "The timeline is consistent: TLS failures start at ts=41 (E7), payment-service latency hits the 2500ms ceiling at ts=40 (E9), and checkout-api timeouts begin at ts=51 (E5). The 10-second lag between payment-service saturation and checkout-api errors is consistent with retry logic or connection pool exhaustion.",
+      "The lack of logs for recommendation-service (E6, E8) is a telemetry gap, but its stable latency (E11) strongly suggests it is not the cause, making H3 a red herring.",
+      "H1 is well-supported by the direct causal chain: External Gateway TLS Expired -> payment-service TLS Failures -> payment-service Timeouts -> checkout-api Timeouts."
+    ],
+    "recommended_actions": [
+      "Renew the expired TLS certificate on the external payment gateway.",
+      "Implement automated monitoring and alerting for TLS certificate expiration on external dependencies.",
+      "Investigate and optimize the retry logic or connection pool configuration in checkout-api to reduce the 10-second lag in error propagation.",
+      "Address the telemetry gap by enabling or fixing logs for recommendation-service to ensure complete observability."
+    ],
+    "termination_reason": "critic_approved",
+    "stats": {
+      "termination_reason": "critic_approved",
+      "rounds": 0,
+      "tool_calls": 7,
+      "llm_calls": 9,
+      "input_tokens": 10428,
+      "output_tokens": 2579,
+      "latency_s": 117.401,
+      "ungrounded_citations": 0,
+      "tasks": {
+        "done": 5,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": "T1",
+      "source": "dependency",
+      "content": "checkout-api depends on payment-service and recommendation-service.",
+      "kind": "fact",
+      "category": "topology",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "service": "checkout-api",
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ],
+        "depended_on_by": [],
+        "neighbors": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms baseline is stable between ~294 and ~308 ms from ts 0 to ts 45.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "checkout-api",
+      "ts": 0,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "range": [
+          293.95,
+          308.13
+        ]
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms jumps to a sustained 2500 ms starting at ts 50 and remains at 2500 ms through ts 100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 50,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "baseline_avg": 301.5,
+        "onset_value": 2500,
+        "duration": 51
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "The constant 2500 ms value from ts 50 onward may indicate a timeout or metric saturation rather than true latency.",
+      "kind": "assumption",
+      "category": "error_log",
+      "service": "checkout-api",
+      "ts": 50,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "value": 2500
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": "T2",
+      "source": "observability",
+      "content": "Sustained ERROR logs for 'upstream payment-service timeout' in checkout-api, occurring every 2 seconds from ts=51 to ts=99.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 51,
+      "meta": {
+        "level": "ERROR",
+        "message": "upstream payment-service timeout",
+        "count": 25,
+        "last_ts": 99
+      }
+    },
+    {
+      "id": "E6",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "query_logs(recommendation-service) returned no rows (a genuine absence and a telemetry gap look identical)",
+      "kind": "fact",
+      "category": "gap",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "Sustained TLS connection failures to external payment gateway due to expired certificate, occurring every 2 seconds from ts=41 to ts=99.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "payment-service",
+      "ts": 41,
+      "meta": {
+        "error_count": 30,
+        "last_ts": 99,
+        "message": "TLS connection refused by external payment gateway: certificate expired"
+      }
+    },
+    {
+      "id": "E8",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "No log data available for recommendation-service in the specified time range.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E9",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "payment-service latency_p99_ms spiked from a baseline of ~120ms to 2500ms at ts=40 and remained at 2500ms through ts=100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "payment-service",
+      "ts": 40,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "baseline_avg": 121.5,
+        "spike_value": 2500
+      }
+    },
+    {
+      "id": "E10",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "payment-service cpu_pct remained stable at 20% throughout the entire window (ts=0 to ts=100).",
+      "kind": "fact",
+      "category": "stable",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "metric": "cpu_pct",
+        "value": 20
+      }
+    },
+    {
+      "id": "E11",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "recommendation-service latency_p99_ms remained stable, fluctuating between 77.67ms and 82.24ms throughout the window.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "min": 77.67,
+        "max": 82.24
+      }
+    }
+  ],
+  "events": [
+    "[  2.03s r0] plan: [('T1', 'topology', []), ('T2', 'scan_logs', []), ('T3', 'scan_metrics', []), ('T4', 'scan_logs', ['T1']), ('T5', 'scan_metrics', ['T1'])]",
+    "[  2.03s r0] running in parallel: ['T1:topology', 'T2:scan_logs', 'T3:scan_metrics']",
+    "[ 52.07s r0] running in parallel: ['T4:scan_logs', 'T5:scan_metrics']",
+    "[ 77.77s r0] reasoning: 3 hypotheses, top=payment-service (0.95)",
+    "[103.79s r0] critic: approve; issues=4 requests=0"
+  ]
+}

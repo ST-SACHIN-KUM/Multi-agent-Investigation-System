@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "incident_id": "SYN-003",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive",
+    "expected_service": "postgres-primary",
+    "expected_category": "resource_exhaustion",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 0,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_s": 21.3176,
+    "termination_reason": "llm_failed",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 0,
+    "token_consumption": 0,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "llm_failed",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive"
+  },
+  "ground_truth": {
+    "service": "postgres-primary",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Database CPU saturation precedes payment and checkout failures along the dependency path.",
+    "causal_timeline": [
+      "35: database saturation",
+      "45: payment timeouts",
+      "55: checkout timeouts",
+      "60: unrelated checkout release"
+    ],
+    "misleading_evidence": [
+      "Checkout deployment happened after the first symptoms."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "inconclusive",
+    "summary": "Inconclusive. Investigation stopped before a final answer; review collected observations.",
+    "hypotheses": [],
+    "facts": [],
+    "assumptions": [],
+    "open_issues": [
+      "Single-agent decision failed: RateLimitError",
+      "Evidence or hypothesis separation is insufficient for a conclusive result"
+    ],
+    "recommended_actions": [
+      "Review missing evidence with the service owner"
+    ],
+    "termination_reason": "llm_failed",
+    "stats": {
+      "termination_reason": "llm_failed",
+      "decision_steps": 1,
+      "tool_calls": 0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "latency_s": 21.317,
+      "ungrounded_citations": 0
+    }
+  },
+  "evidence": [],
+  "events": []
+}

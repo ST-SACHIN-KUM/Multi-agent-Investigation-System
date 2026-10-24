@@ -1,0 +1,547 @@
+{
+  "metrics": {
+    "incident_id": "SYN-002",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified",
+    "expected_service": "checkout-api",
+    "expected_category": "bad_deploy",
+    "predicted_service": "checkout-api",
+    "predicted_category": "bad_deploy",
+    "confidence": 0.92,
+    "root_cause_eligible": true,
+    "root_cause_correct": true,
+    "outcome_correct": true,
+    "case_success": true,
+    "valid_citations": 6,
+    "invalid_citations": 0,
+    "citation_validity": 1.0,
+    "tool_calls": 8,
+    "llm_calls": 9,
+    "input_tokens": 15042,
+    "output_tokens": 1028,
+    "latency_s": 77.4626,
+    "termination_reason": "agent_finished",
+    "error": null,
+    "root_cause_accuracy": 1,
+    "evidence_grounding": 1.0,
+    "tool_call_count": 8,
+    "token_consumption": 16070,
+    "ground_truth_accuracy": 1
+  },
+  "diagnostics": {
+    "termination_reason": "agent_finished",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified"
+  },
+  "ground_truth": {
+    "service": "checkout-api",
+    "category": "bad_deploy",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Checkout parser regression introduced by the release; dependencies remain healthy.",
+    "causal_timeline": [
+      "40: checkout parser release",
+      "45: checkout failures begin"
+    ],
+    "misleading_evidence": [
+      "A dependency warning is isolated and predates the incident."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "root_cause_identified",
+    "summary": "A deployment of checkout-api at ts=40 (v-40, 'Replace checkout request parser') is immediately followed by a sustained stream of ERROR logs starting at ts=46 ('request parser exception on valid checkout payload') that continues through the end of the window (ts=98). No WARN/ERROR logs exist for checkout-api before ts=40 (E8), establishing a clear temporal correlation between the deploy and the onset of failures. The error message explicitly indicates the new parser is rejecting valid payloads, which is a code defect introduced by the deploy. Metrics for error_rate, latency_p99, and request_rate are empty (E3-E5), so quantitative impact cannot be confirmed, but the log evidence is strong and consistent. payment-service shows only a single recovered slow query at ts=20 (E7), well before the incident onset, making a dependency failure unlikely. The recommendation-service dependency was not queried, but the parser error is internal to checkout-api and does not implicate downstream services. The most probable root cause is a bad deploy (v-40) that introduced a defective request parser.",
+    "hypotheses": [
+      {
+        "id": "H1",
+        "statement": "Deployment v-40 at ts=40 replaced the checkout request parser with a defective version that throws exceptions on valid payloads, causing checkout submission failures.",
+        "category": "bad_deploy",
+        "service": "checkout-api",
+        "confidence": 0.92,
+        "supporting": [
+          "E1",
+          "E2",
+          "E8"
+        ],
+        "contradicting": [],
+        "assumptions": [
+          "The parser exception is the direct cause of customer-reported failures",
+          "No other concurrent changes affected checkout-api"
+        ]
+      },
+      {
+        "id": "H2",
+        "statement": "A dependency failure (payment-service or recommendation-service) caused checkout-api to fail.",
+        "category": "dependency_failure",
+        "service": "checkout-api",
+        "confidence": 0.05,
+        "supporting": [
+          "E6"
+        ],
+        "contradicting": [
+          "E1",
+          "E7"
+        ],
+        "assumptions": []
+      }
+    ],
+    "facts": [
+      "E1",
+      "E2",
+      "E6"
+    ],
+    "assumptions": [
+      "The parser exception is the direct cause of customer-reported failures",
+      "No other concurrent changes affected checkout-api"
+    ],
+    "open_issues": [
+      "E3: query_metrics returned empty data",
+      "E4: query_metrics returned empty data",
+      "E5: query_metrics returned empty data",
+      "E8: query_logs returned empty data",
+      "Metrics (error_rate, latency_p99, request_rate) returned empty data, so quantitative impact and latency degradation cannot be confirmed",
+      "recommendation-service logs were not queried, though the parser error is internal and unlikely to be dependency-related",
+      "No confirmation that the parser exception is the sole cause of all customer-reported failures (e.g., slow requests vs. failed requests)"
+    ],
+    "recommended_actions": [
+      "Rollback checkout-api to the version prior to v-40 to restore the previous request parser",
+      "After rollback, verify that parser exceptions cease and checkout success rate recovers",
+      "Investigate the v-40 parser code change to identify the specific defect causing valid payload rejection",
+      "Add regression tests for the checkout request parser to catch payload validation regressions before deployment",
+      "Enable or fix metrics collection for checkout-api (error_rate, latency_p99, request_rate) to improve future observability"
+    ],
+    "termination_reason": "agent_finished",
+    "stats": {
+      "termination_reason": "agent_finished",
+      "decision_steps": 9,
+      "tool_calls": 8,
+      "llm_calls": 9,
+      "input_tokens": 15042,
+      "output_tokens": 1028,
+      "latency_s": 77.461,
+      "ungrounded_citations": 0
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 1: query_logs {'service': 'checkout-api', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 46,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 48,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 50,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 52,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 54,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 56,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 58,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 60,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 62,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 64,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 66,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 68,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 70,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 72,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 74,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 76,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 78,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 80,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 82,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 84,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 86,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 88,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 90,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 92,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 94,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 96,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            },
+            {
+              "ts": 98,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "request parser exception on valid checkout payload"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 2: get_deployments {'service': 'checkout-api', 'start': 0, 'end': 100}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "get_deployments",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100
+        },
+        "result": {
+          "tool": "get_deployments",
+          "ok": true,
+          "data": [
+            {
+              "ts": 40,
+              "service": "checkout-api",
+              "type": "deploy",
+              "version": "v-40",
+              "description": "Replace checkout request parser"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 3: query_metrics {'service': 'checkout-api', 'start': 0, 'end': 100, 'metric': 'error_rate'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "metric": "error_rate"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 4: query_metrics {'service': 'checkout-api', 'start': 0, 'end': 100, 'metric': 'latency_p99'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "metric": "latency_p99"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 5: query_metrics {'service': 'checkout-api', 'start': 0, 'end': 100, 'metric': 'request_rate'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "metric": "request_rate"
+        },
+        "result": {
+          "tool": "query_metrics",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E6",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 6: get_dependencies {'service': 'checkout-api'}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "get_dependencies",
+        "args": {
+          "service": "checkout-api"
+        },
+        "result": {
+          "tool": "get_dependencies",
+          "ok": true,
+          "data": [
+            {
+              "service": "payment-service",
+              "relation": "depends_on"
+            },
+            {
+              "service": "recommendation-service",
+              "relation": "depends_on"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 7: query_logs {'service': 'payment-service', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "payment-service",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 20,
+              "service": "payment-service",
+              "level": "WARN",
+              "message": "single slow query; recovered"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "id": "E8",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 8: query_logs {'service': 'checkout-api', 'start': 0, 'end': 40, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 40,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [],
+          "completeness": "empty",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    }
+  ],
+  "events": [
+    "[  6.63s r0] E1: query_logs -> full",
+    "[  7.02s r1] E2: get_deployments -> full",
+    "[ 17.94s r2] E3: query_metrics -> empty",
+    "[ 18.97s r3] E4: query_metrics -> empty",
+    "[ 21.94s r4] E5: query_metrics -> empty",
+    "[ 23.47s r5] E6: get_dependencies -> full",
+    "[ 40.48s r6] E7: query_logs -> full",
+    "[ 60.22s r7] E8: query_logs -> empty"
+  ]
+}

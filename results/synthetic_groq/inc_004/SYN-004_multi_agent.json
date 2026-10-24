@@ -1,0 +1,450 @@
+{
+  "metrics": {
+    "incident_id": "SYN-004",
+    "architecture": "multi_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified",
+    "expected_service": "redis-cache",
+    "expected_category": "resource_exhaustion",
+    "predicted_service": "redis-cache",
+    "predicted_category": "resource_exhaustion",
+    "confidence": 0.98,
+    "root_cause_eligible": true,
+    "root_cause_correct": true,
+    "outcome_correct": true,
+    "case_success": true,
+    "valid_citations": 23,
+    "invalid_citations": 0,
+    "citation_validity": 1.0,
+    "tool_calls": 12,
+    "llm_calls": 18,
+    "input_tokens": 23375,
+    "output_tokens": 5475,
+    "latency_s": 289.315,
+    "termination_reason": "critic_approved",
+    "error": null,
+    "root_cause_accuracy": 1,
+    "evidence_grounding": 1.0,
+    "tool_call_count": 12,
+    "token_consumption": 28850,
+    "ground_truth_accuracy": 1
+  },
+  "diagnostics": {
+    "termination_reason": "critic_approved",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified"
+  },
+  "ground_truth": {
+    "service": "redis-cache",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Cache eviction storm degrades recommendations and then checkout, despite a misleading past incident.",
+    "causal_timeline": [
+      "35: cache hit rate collapses",
+      "45: recommendations degrade",
+      "55: checkout degrades"
+    ],
+    "misleading_evidence": [
+      "Historical payment deployment explanation has no matching current change."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "root_cause_identified",
+    "summary": "The incident was caused by memory exhaustion in redis-cache, which triggered a continuous cache eviction storm starting at ts=36. This resulted in a sharp drop in cache hit rate from a baseline of ~95.5% to 20% at ts=35. The degradation in cache performance led to timeouts in recommendation-service (observed from ts=46) and a latency spike to 2500 ms (observed from ts=45). These issues propagated to checkout-api, causing sustained timeouts and a latency spike to 2500 ms starting at ts=55. The root cause of the memory exhaustion (e.g., traffic spike, leak, or deployment) is unknown due to missing memory metrics and deployment data. Additionally, the 10-second gap between the cache hit rate drop and the recommendation-service latency spike is unexplained by current evidence, and the assumption that checkout-api lacks a circuit breaker is unverified.",
+    "hypotheses": [
+      {
+        "id": "H1",
+        "statement": "Redis-cache memory exhaustion triggered a cache eviction storm, causing a sharp drop in hit rate. This forced recommendation-service to handle increased load or fail on cache lookups, leading to its latency spike and timeouts, which propagated to checkout-api.",
+        "category": "resource_exhaustion",
+        "service": "redis-cache",
+        "confidence": 0.98,
+        "supporting": [
+          "E1",
+          "E3",
+          "E4",
+          "E6",
+          "E9",
+          "E11",
+          "E13",
+          "E15",
+          "E16"
+        ],
+        "contradicting": [],
+        "assumptions": [
+          "The 10-second gap between cache hit rate drop (ts=35) and recommendation-service latency spike (ts=45) is due to buffer exhaustion or timeout thresholds.",
+          "checkout-api lacks an effective circuit breaker for recommendation-service, allowing latency to propagate."
+        ]
+      },
+      {
+        "id": "H2",
+        "statement": "An internal issue within recommendation-service, unrelated to redis-cache, caused the latency spike and propagated to checkout-api.",
+        "category": "service_degradation",
+        "service": "recommendation-service",
+        "confidence": 0.02,
+        "supporting": [
+          "E1",
+          "E3",
+          "E4",
+          "E9"
+        ],
+        "contradicting": [
+          "E6",
+          "E11",
+          "E13"
+        ],
+        "assumptions": [
+          "The redis-cache memory exhaustion and hit rate drop are coincidental or symptoms of a different underlying issue in recommendation-service."
+        ]
+      },
+      {
+        "id": "H3",
+        "statement": "A network partition or infrastructure issue between checkout-api and recommendation-service caused the timeouts.",
+        "category": "network_issue",
+        "service": "checkout-api",
+        "confidence": 0.01,
+        "supporting": [
+          "E1",
+          "E3",
+          "E4"
+        ],
+        "contradicting": [
+          "E6",
+          "E9",
+          "E11",
+          "E13"
+        ],
+        "assumptions": [
+          "The network issue is specific to the path between checkout-api and recommendation-service.",
+          "The redis-cache issues are unrelated to the checkout-api latency."
+        ]
+      }
+    ],
+    "facts": [
+      "E1",
+      "E3",
+      "E4",
+      "E6",
+      "E9",
+      "E11",
+      "E13",
+      "E15",
+      "E16"
+    ],
+    "assumptions": [
+      "The 10-second gap between cache hit rate drop (ts=35) and recommendation-service latency spike (ts=45) is due to buffer exhaustion or timeout thresholds.",
+      "checkout-api lacks an effective circuit breaker for recommendation-service, allowing latency to propagate."
+    ],
+    "open_issues": [
+      "The 10-second gap between the redis-cache hit rate drop (ts=35) and the recommendation-service latency spike (ts=45) is unexplained by the current evidence; it is attributed to 'buffer exhaustion' which is an assumption, not a fact.",
+      "The root cause of the redis-cache memory exhaustion (e.g., a specific deployment, a traffic spike, or a memory leak) is unknown due to the empty deployment data (E12) and missing memory metrics (E14).",
+      "The assumption that checkout-api lacks a circuit breaker is unverified; the propagation of latency could be due to a misconfigured timeout rather than a missing breaker."
+    ],
+    "recommended_actions": [
+      "Investigate the root cause of redis-cache memory exhaustion by reviewing memory metrics and deployment logs around ts=35.",
+      "Verify the presence and configuration of circuit breakers in checkout-api to determine if latency propagation was due to a missing breaker or misconfigured timeouts.",
+      "Analyze the 10-second gap between the redis-cache hit rate drop (ts=35) and recommendation-service latency spike (ts=45) to identify any intermediate buffering or timeout mechanisms."
+    ],
+    "termination_reason": "critic_approved",
+    "stats": {
+      "termination_reason": "critic_approved",
+      "rounds": 2,
+      "tool_calls": 12,
+      "llm_calls": 18,
+      "input_tokens": 23375,
+      "output_tokens": 5475,
+      "latency_s": 289.314,
+      "ungrounded_citations": 0,
+      "tasks": {
+        "done": 10,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": "T1",
+      "source": "dependency",
+      "content": "checkout-api depends on payment-service and recommendation-service.",
+      "kind": "fact",
+      "category": "topology",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "service": "checkout-api",
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ],
+        "depended_on_by": [],
+        "neighbors": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms baseline is stable between ~291 ms and ~308 ms from ts 0 to ts 50.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "checkout-api",
+      "ts": 0,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "range": [
+          291.3,
+          308.28
+        ]
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms jumps to a sustained 2500 ms starting at ts 55 and remains at 2500 ms through ts 100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 55,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "baseline_max": 308.28,
+        "onset_value": 2500,
+        "duration": 45
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": "T2",
+      "source": "observability",
+      "content": "Sustained ERROR logs for 'upstream recommendation-service timeout' in checkout-api from ts=56 to ts=98 (22 consecutive occurrences at 2s intervals).",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 56,
+      "meta": {
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout",
+        "count": 22,
+        "last_ts": 98
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "query_logs(payment-service) returned no rows (a genuine absence and a telemetry gap look identical)",
+      "kind": "fact",
+      "category": "gap",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E6",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "recommendation-service logged a sustained series of ERROR events 'upstream redis-cache timeout' from ts=46 through ts=98 (27 consecutive occurrences at 2s intervals).",
+      "kind": "fact",
+      "category": "onset",
+      "service": "recommendation-service",
+      "ts": 46,
+      "meta": {
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout",
+        "count": 27,
+        "last_ts": 98
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "payment-service returned no log rows for the queried window (completeness: empty).",
+      "kind": "fact",
+      "category": "stable",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E8",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "payment-service latency_p99_ms remained stable between 116.69 ms and 123.54 ms across the entire window (ts 0-100).",
+      "kind": "fact",
+      "category": "stable",
+      "service": "payment-service",
+      "ts": null,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "min": 116.69,
+        "max": 123.54
+      }
+    },
+    {
+      "id": "E9",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "recommendation-service latency_p99_ms spiked from a baseline of ~78-82 ms to a sustained 2500 ms starting at ts 45 and continuing through ts 100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "recommendation-service",
+      "ts": 45,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "baseline_avg": 79.6,
+        "spike_value": 2500
+      }
+    },
+    {
+      "id": "E10",
+      "task_id": "T6",
+      "source": "observability",
+      "content": "redis-cache hit_rate_pct was stable between 92.21% and 97.62% from ts=0 to ts=30.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "redis-cache",
+      "ts": 0,
+      "meta": {
+        "metric": "hit_rate_pct",
+        "range": [
+          92.21,
+          97.62
+        ]
+      }
+    },
+    {
+      "id": "E11",
+      "task_id": "T6",
+      "source": "observability",
+      "content": "redis-cache hit_rate_pct dropped to 20% at ts=35 and remained at 20% through ts=100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "redis-cache",
+      "ts": 35,
+      "meta": {
+        "metric": "hit_rate_pct",
+        "baseline_avg": 95.5,
+        "deviation": -75.5
+      }
+    },
+    {
+      "id": "E12",
+      "task_id": "T10",
+      "source": "dependency",
+      "content": "get_deployments(*) returned no rows (a genuine absence and a telemetry gap look identical)",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "get_deployments",
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E13",
+      "task_id": "T8",
+      "source": "observability",
+      "content": "redis-cache entered a sustained state of memory exhaustion with continuous cache eviction storms, beginning at ts=36 and persisting through the end of the observed window (ts=98).",
+      "kind": "fact",
+      "category": "onset",
+      "service": "redis-cache",
+      "ts": 36,
+      "meta": {
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm",
+        "duration": 62,
+        "count": 32
+      }
+    },
+    {
+      "id": "E14",
+      "task_id": "T9",
+      "source": "observability",
+      "content": "The requested metrics (memory_usage, connection_count, eviction_rate) were not returned; only hit_rate_pct data is present in the results.",
+      "kind": "fact",
+      "category": "error_log",
+      "service": "redis-cache",
+      "ts": null,
+      "meta": {
+        "requested_metrics": [
+          "memory_usage",
+          "connection_count",
+          "eviction_rate"
+        ],
+        "returned_metrics": [
+          "hit_rate_pct"
+        ]
+      }
+    },
+    {
+      "id": "E15",
+      "task_id": "T9",
+      "source": "observability",
+      "content": "hit_rate_pct dropped from a baseline of ~92-97% to a sustained 20% starting at ts=35.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "redis-cache",
+      "ts": 35,
+      "meta": {
+        "baseline_range": [
+          92.21,
+          97.62
+        ],
+        "deviation_value": 20
+      }
+    },
+    {
+      "id": "E16",
+      "task_id": "T9",
+      "source": "observability",
+      "content": "hit_rate_pct remained stable at 20% from ts=35 through ts=100.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "redis-cache",
+      "ts": 35,
+      "meta": {
+        "stable_value": 20,
+        "duration": 65
+      }
+    }
+  ],
+  "events": [
+    "[  1.93s r0] plan: [('T1', 'topology', []), ('T2', 'scan_logs', []), ('T3', 'scan_metrics', []), ('T4', 'scan_logs', ['T1']), ('T5', 'scan_metrics', ['T1'])]",
+    "[  1.93s r0] running in parallel: ['T1:topology', 'T2:scan_logs', 'T3:scan_metrics']",
+    "[ 16.63s r0] running in parallel: ['T4:scan_logs', 'T5:scan_metrics']",
+    "[ 68.97s r0] reasoning: 3 hypotheses, top=recommendation-service (0.95)",
+    "[ 98.85s r0] critic: challenge; issues=3 requests=2",
+    "[ 98.85s r1] new task T6 scan_metrics ['redis-cache'] <- critic: To confirm if redis-cache actually experienced a failure or latency spike that correlates with the recommendation-service errors.",
+    "[ 98.85s r1] new task T7 scan_logs ['payment-service'] <- critic: To explicitly check for error-level logs in payment-service to rule out silent failures, as the previous query returned empty results which could be a telemetry gap.",
+    "[ 98.85s r1] running in parallel: ['T6:scan_metrics', 'T7:scan_logs']",
+    "[155.99s r1] reasoning: 3 hypotheses, top=redis-cache (0.95)",
+    "[171.25s r1] critic: challenge; issues=4 requests=3",
+    "[171.25s r2] new task T8 scan_logs ['redis-cache'] <- critic: To identify the root cause of the redis-cache hit rate drop at ts=35. Logs may reveal memory errors, connection issues, or application-level failures.",
+    "[171.25s r2] new task T9 scan_metrics ['redis-cache'] <- critic: To check for resource exhaustion or eviction issues in redis-cache that could explain the hit rate drop.",
+    "[171.25s r2] new task T10 changes ['redis-cache', 'recommendation-service'] <- critic: To check for recent deployments or configuration changes that might have caused the redis-cache degradation.",
+    "[171.25s r2] running in parallel: ['T8:scan_logs', 'T9:scan_metrics', 'T10:changes']",
+    "[249.44s r2] reasoning: 3 hypotheses, top=redis-cache (0.98)",
+    "[284.00s r2] critic: approve; issues=3 requests=0"
+  ]
+}

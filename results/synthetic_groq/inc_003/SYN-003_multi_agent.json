@@ -1,0 +1,503 @@
+{
+  "metrics": {
+    "incident_id": "SYN-003",
+    "architecture": "multi_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified",
+    "expected_service": "postgres-primary",
+    "expected_category": "resource_exhaustion",
+    "predicted_service": "postgres-primary",
+    "predicted_category": "resource_exhaustion",
+    "confidence": 0.92,
+    "root_cause_eligible": true,
+    "root_cause_correct": true,
+    "outcome_correct": true,
+    "case_success": true,
+    "valid_citations": 16,
+    "invalid_citations": 0,
+    "citation_validity": 1.0,
+    "tool_calls": 15,
+    "llm_calls": 21,
+    "input_tokens": 30865,
+    "output_tokens": 6982,
+    "latency_s": 333.8374,
+    "termination_reason": "max_rounds_reached",
+    "error": null,
+    "root_cause_accuracy": 1,
+    "evidence_grounding": 1.0,
+    "tool_call_count": 15,
+    "token_consumption": 37847,
+    "ground_truth_accuracy": 1
+  },
+  "diagnostics": {
+    "termination_reason": "max_rounds_reached",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified"
+  },
+  "ground_truth": {
+    "service": "postgres-primary",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Database CPU saturation precedes payment and checkout failures along the dependency path.",
+    "causal_timeline": [
+      "35: database saturation",
+      "45: payment timeouts",
+      "55: checkout timeouts",
+      "60: unrelated checkout release"
+    ],
+    "misleading_evidence": [
+      "Checkout deployment happened after the first symptoms."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "root_cause_identified",
+    "summary": "Postgres-primary experienced CPU saturation, spiking from a baseline of ~35% to 99% at ts=35 and remaining at 99% through ts=100. This coincided with payment-service latency_p99_ms spiking to 2500ms at ts=45 and sustained 'upstream postgres-primary query timeout' errors from ts=46 to ts=98. Subsequently, checkout-api latency_p99_ms spiked to 2500ms at ts=55, accompanied by 'upstream payment-service timeout' errors from ts=56 to ts=98. The root cause is identified as resource exhaustion in postgres-primary, though the specific bottleneck (CPU vs. I/O/locks) is unconfirmed due to missing database load metrics. The 10-second delay between payment-service and checkout-api onset is unexplained, and the identical 2500ms latency values suggest hard-coded timeouts rather than measured query times.",
+    "hypotheses": [
+      {
+        "id": "H1",
+        "statement": "postgres-primary CPU saturation caused query timeouts in payment-service, which propagated to checkout-api as upstream timeouts.",
+        "category": "resource_exhaustion",
+        "service": "postgres-primary",
+        "confidence": 0.92,
+        "supporting": [
+          "E14",
+          "E17",
+          "E7",
+          "E13",
+          "E10",
+          "E2",
+          "E4",
+          "E1"
+        ],
+        "contradicting": [],
+        "assumptions": [
+          "The 2500ms latency values represent timeout thresholds rather than measured query times, indicating the DB is unresponsive or too slow to respond within the limit.",
+          "The 10-second delay between payment-service onset (ts=45/46) and checkout-api onset (ts=55/56) is due to retry logic or circuit breaker thresholds in checkout-api.",
+          "The dependency between payment-service and postgres-primary is valid despite the failed topology task (E12), as evidenced by explicit error logs (E7, E13)."
+        ]
+      },
+      {
+        "id": "H2",
+        "statement": "A network partition or connectivity issue between payment-service and postgres-primary caused the timeouts, independent of database load.",
+        "category": "network_failure",
+        "service": "payment-service",
+        "confidence": 0.05,
+        "supporting": [
+          "E7",
+          "E10"
+        ],
+        "contradicting": [
+          "E14",
+          "E17"
+        ],
+        "assumptions": [
+          "The CPU spike on postgres-primary is a coincidental anomaly or unrelated to the connectivity issue."
+        ]
+      },
+      {
+        "id": "H3",
+        "statement": "recommendation-service failure caused checkout-api timeouts.",
+        "category": "dependency_failure",
+        "service": "recommendation-service",
+        "confidence": 0.03,
+        "supporting": [
+          "E1"
+        ],
+        "contradicting": [
+          "E11",
+          "E2",
+          "E4"
+        ],
+        "assumptions": [
+          "The lack of logs for recommendation-service indicates a total outage that impacts checkout."
+        ]
+      }
+    ],
+    "facts": [
+      "E14",
+      "E17",
+      "E7",
+      "E13",
+      "E10",
+      "E2",
+      "E4",
+      "E1"
+    ],
+    "assumptions": [
+      "The 2500ms latency values represent timeout thresholds rather than measured query times, indicating the DB is unresponsive or too slow to respond within the limit.",
+      "The 10-second delay between payment-service onset (ts=45/46) and checkout-api onset (ts=55/56) is due to retry logic or circuit breaker thresholds in checkout-api.",
+      "The dependency between payment-service and postgres-primary is valid despite the failed topology task (E12), as evidenced by explicit error logs (E7, E13)."
+    ],
+    "open_issues": [
+      "Missing direct evidence of database load: Critical metrics (active_connections, query_latency_p99, io_wait) are missing (E15, E18, E19). CPU saturation (E14, E17) is a proxy for load, but without query latency or connection counts, it is an assumption that CPU is the bottleneck rather than I/O or lock contention.",
+      "Unresolved timing gap: The 10-second delay between payment-service onset (ts=45/46) and checkout-api onset (ts=55/56) is unexplained. The hypothesis assumes retry logic, but no evidence of retry configuration or circuit breaker behavior is provided.",
+      "Red herring risk: The 2500ms latency values in payment-service (E10) and checkout-api (E4) are identical, suggesting they may be hard-coded timeout thresholds rather than measured values. This makes it impossible to distinguish between 'DB is slow' and 'DB is unresponsive' without query-level metrics.",
+      "Close competitor: H2 (network partition) is not fully ruled out. While CPU spike contradicts it, a network issue could cause CPU spike due to retry storms or connection pool exhaustion. The lack of network metrics (e.g., connection errors, TCP retransmissions) leaves this gap."
+    ],
+    "recommended_actions": [
+      "Collect and analyze database load metrics (active_connections, query_latency_p99, io_wait) to confirm whether CPU, I/O, or lock contention is the primary bottleneck.",
+      "Investigate the 10-second delay between payment-service and checkout-api onset by reviewing retry logic and circuit breaker configurations in checkout-api.",
+      "Verify whether the 2500ms latency values are hard-coded timeout thresholds or measured query times to distinguish between slow and unresponsive database states.",
+      "Gather network metrics (e.g., connection errors, TCP retransmissions) to rule out network partition or retry storms as contributing factors."
+    ],
+    "termination_reason": "max_rounds_reached",
+    "stats": {
+      "termination_reason": "max_rounds_reached",
+      "rounds": 3,
+      "tool_calls": 15,
+      "llm_calls": 21,
+      "input_tokens": 30865,
+      "output_tokens": 6982,
+      "latency_s": 333.835,
+      "ungrounded_citations": 0,
+      "tasks": {
+        "done": 11,
+        "failed": 1,
+        "skipped": 0
+      }
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": "T1",
+      "source": "dependency",
+      "content": "checkout-api depends on payment-service and recommendation-service.",
+      "kind": "fact",
+      "category": "topology",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "service": "checkout-api",
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ],
+        "depended_on_by": [],
+        "neighbors": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": "T2",
+      "source": "observability",
+      "content": "Sustained ERROR logs for 'upstream payment-service timeout' in checkout-api from ts=56 to ts=98 (22 consecutive occurrences at 2s intervals).",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 56,
+      "meta": {
+        "level": "ERROR",
+        "message": "upstream payment-service timeout",
+        "count": 22,
+        "last_ts": 98
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "Baseline latency_p99_ms for checkout-api is stable between 292.4 and 308.62 ms from ts=0 to ts=50.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "checkout-api",
+      "ts": 0,
+      "meta": {
+        "min": 292.4,
+        "max": 308.62
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "Sustained deviation in latency_p99_ms for checkout-api begins at ts=55, jumping to 2500 ms and remaining constant through ts=100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 55,
+      "meta": {
+        "baseline_avg": 301.5,
+        "deviation_value": 2500,
+        "duration": 45
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "Data completeness is reported as 'full' for the queried range.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {}
+    },
+    {
+      "id": "E6",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "query_logs(recommendation-service) returned no rows (a genuine absence and a telemetry gap look identical)",
+      "kind": "fact",
+      "category": "gap",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "Sustained ERROR logs for 'upstream postgres-primary query timeout' in payment-service from ts=46 to ts=98.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "payment-service",
+      "ts": 46,
+      "meta": {
+        "level": "ERROR",
+        "message": "upstream postgres-primary query timeout",
+        "last_ts": 98,
+        "count": 27
+      }
+    },
+    {
+      "id": "E8",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "No log data available for recommendation-service (completeness: empty).",
+      "kind": "fact",
+      "category": "stable",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E9",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "payment-service latency_p99_ms baseline is approximately 120ms (range 118-122ms) from ts=0 to ts=40.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "payment-service",
+      "ts": 0,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "baseline_range": [
+          118.19,
+          122.35
+        ]
+      }
+    },
+    {
+      "id": "E10",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "payment-service latency_p99_ms spikes to 2500ms at ts=45 and remains at 2500ms through ts=100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "payment-service",
+      "ts": 45,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "value": 2500,
+        "duration": "ts=45 to ts=100"
+      }
+    },
+    {
+      "id": "E11",
+      "task_id": "T5",
+      "source": "observability",
+      "content": "recommendation-service latency_p99_ms remains stable between 78ms and 82ms throughout the entire window (ts=0 to ts=100).",
+      "kind": "fact",
+      "category": "stable",
+      "service": "recommendation-service",
+      "ts": 0,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "range": [
+          78.03,
+          82.38
+        ]
+      }
+    },
+    {
+      "id": "E12",
+      "task_id": "T8",
+      "source": "orchestrator",
+      "content": "Task topology {'services': ['payment-service'], 'include': ['postgres-primary']} failed after 2 attempts; evidence missing",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "get_dependencies",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E13",
+      "task_id": "T7",
+      "source": "observability",
+      "content": "Sustained upstream postgres-primary query timeouts observed from ts=46 through ts=60 (8 consecutive ERROR events at 2-second intervals).",
+      "kind": "fact",
+      "category": "onset",
+      "service": "payment-service",
+      "ts": 46,
+      "meta": {
+        "first_ts": 46,
+        "last_ts": 60,
+        "count": 8,
+        "message": "upstream postgres-primary query timeout"
+      }
+    },
+    {
+      "id": "E14",
+      "task_id": "T6",
+      "source": "observability",
+      "content": "CPU usage for postgres-primary spiked from a baseline of ~35% to 99% at ts=35 and remained at 99% through ts=100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "postgres-primary",
+      "ts": 35,
+      "meta": {
+        "metric": "cpu_pct",
+        "baseline_avg": 34.88,
+        "peak_value": 99
+      }
+    },
+    {
+      "id": "E15",
+      "task_id": "T6",
+      "source": "observability",
+      "content": "Data for requested metrics io_wait, active_connections, and query_latency_p99 is missing from the results; only cpu_pct was returned.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "postgres-primary",
+      "ts": null,
+      "meta": {
+        "missing_metrics": [
+          "io_wait",
+          "active_connections",
+          "query_latency_p99"
+        ]
+      }
+    },
+    {
+      "id": "E16",
+      "task_id": "T10",
+      "source": "observability",
+      "content": "checkout-api logged 3 ERROR entries for 'upstream payment-service timeout' at ts 56, 58, and 60.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 56,
+      "meta": {
+        "count": 3,
+        "level": "ERROR",
+        "pattern": "timeout"
+      }
+    },
+    {
+      "id": "E17",
+      "task_id": "T9",
+      "source": "observability",
+      "content": "cpu_pct on postgres-primary spiked from a baseline of 35.31 at ts=30 to 99 at ts=35 and remained at 99 through ts=100.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "postgres-primary",
+      "ts": 35,
+      "meta": {
+        "metric": "cpu_pct",
+        "baseline": 35.31,
+        "sustained_value": 99,
+        "duration": 65
+      }
+    },
+    {
+      "id": "E18",
+      "task_id": "T9",
+      "source": "observability",
+      "content": "The requested metrics (active_connections, io_wait, query_latency_p99, lock_wait_time) were not returned; only cpu_pct data is present in the results.",
+      "kind": "fact",
+      "category": "error_log",
+      "service": "postgres-primary",
+      "ts": null,
+      "meta": {
+        "requested_metrics": [
+          "active_connections",
+          "io_wait",
+          "query_latency_p99",
+          "lock_wait_time"
+        ],
+        "returned_metrics": [
+          "cpu_pct"
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "E19",
+      "task_id": "T11",
+      "source": "observability",
+      "content": "The requested metrics (active_connections, query_latency_p99, io_wait) were not returned; only cpu_pct data is present in the results.",
+      "kind": "fact",
+      "category": "error_log",
+      "service": "postgres-primary",
+      "ts": null,
+      "meta": {
+        "requested_metrics": [
+          "active_connections",
+          "query_latency_p99",
+          "io_wait"
+        ],
+        "returned_metrics": [
+          "cpu_pct"
+        ]
+      }
+    }
+  ],
+  "events": [
+    "[  2.21s r0] plan: [('T1', 'topology', []), ('T2', 'scan_logs', []), ('T3', 'scan_metrics', []), ('T4', 'scan_logs', ['T1']), ('T5', 'scan_metrics', ['T1'])]",
+    "[  2.21s r0] running in parallel: ['T1:topology', 'T2:scan_logs', 'T3:scan_metrics']",
+    "[ 25.77s r0] running in parallel: ['T4:scan_logs', 'T5:scan_metrics']",
+    "[ 42.63s r0] reasoning: 3 hypotheses, top=payment-service (0.95)",
+    "[ 69.77s r0] critic: challenge; issues=5 requests=3",
+    "[ 69.77s r1] new task T6 scan_metrics ['postgres-primary'] <- critic: Direct evidence of database health and load is missing. Without this, H1's core assumption is unverified.",
+    "[ 69.77s r1] new task T7 scan_logs ['payment-service'] <- critic: Investigate the 10-second delay between payment-service and checkout-api failures. Look for retry logic, circuit breaker activation, or connection pool exhaustion logs that could explain the timing gap.",
+    "[ 69.77s r1] new task T8 topology ['payment-service'] <- critic: Confirm the exact dependency relationship between payment-service and postgres-primary, including connection pool configuration and timeout settings.",
+    "[ 69.77s r1] running in parallel: ['T6:scan_metrics', 'T7:scan_logs', 'T8:topology']",
+    "[ 69.77s r1] T8 (topology) attempt 1 failed: KeyError: 'service'",
+    "[ 69.79s r1] T8 (topology) attempt 2 failed: KeyError: 'service'",
+    "[ 90.85s r1] T6 (scan_metrics) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Used 735, Requested 642. Please try again in 22.62s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[117.49s r1] reasoning: 3 hypotheses, top=postgres-primary (0.92)",
+    "[166.16s r1] critic: challenge; issues=4 requests=2",
+    "[166.16s r2] new task T9 scan_metrics ['postgres-primary'] <- critic: To determine the cause of the CPU spike (E14) and confirm if it is due to resource exhaustion (connections/IO) or a specific slow query, which is critical to validate H1.",
+    "[166.16s r2] new task T10 scan_logs ['checkout-api'] <- critic: To verify the assumption about the 10-second delay between payment-service and checkout-api onsets, checking for retry logic or circuit breaker activation.",
+    "[166.16s r2] running in parallel: ['T9:scan_metrics', 'T10:scan_logs']",
+    "[193.74s r2] reasoning: 3 hypotheses, top=postgres-primary (0.95)",
+    "[224.90s r2] critic: challenge; issues=3 requests=2",
+    "[224.90s r3] new task T11 scan_metrics ['postgres-primary'] <- critic: To confirm if the CPU spike is correlated with actual database load (connections/query latency) or if it is an isolated anomaly, validating the 'resource_exhaustion' hypothesis.",
+    "[224.90s r3] new task T12 scan_logs ['checkout-api'] <- critic: To investigate the 10-second delay between payment-service and checkout-api onset, checking for retry logic or circuit breaker behavior that explains the timing gap.",
+    "[224.90s r3] running in parallel: ['T11:scan_metrics', 'T12:scan_logs']",
+    "[259.80s r3] T12 (scan_logs) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Used 506, Requested 551. Please try again in 3.42s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[271.41s r3] reasoning: 3 hypotheses, top=postgres-primary (0.92)",
+    "[298.69s r3] critic: challenge; issues=4 requests=2"
+  ]
+}

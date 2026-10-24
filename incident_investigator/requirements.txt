@@ -1,0 +1,2 @@
+# Optional for live inference; mock mode uses only the Python standard library.
+groq

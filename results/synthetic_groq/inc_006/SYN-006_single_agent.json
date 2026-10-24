@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "incident_id": "SYN-006",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive",
+    "expected_service": "payment-service",
+    "expected_category": "bad_config",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 0,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_s": 0.4931,
+    "termination_reason": "llm_failed",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 0,
+    "token_consumption": 0,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "llm_failed",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive"
+  },
+  "ground_truth": {
+    "service": "payment-service",
+    "category": "bad_config",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Wrong database endpoint in payment configuration; process liveness is healthy while functional requests fail.",
+    "causal_timeline": [
+      "40: endpoint changed",
+      "45: functional errors",
+      "46: shallow probe reports healthy",
+      "55: checkout fails"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [
+      "Healthy liveness probe conflicts with request failures because it excludes the database."
+    ],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "inconclusive",
+    "summary": "Inconclusive. Investigation stopped before a final answer; review collected observations.",
+    "hypotheses": [],
+    "facts": [],
+    "assumptions": [],
+    "open_issues": [
+      "Single-agent decision failed: RateLimitError",
+      "Evidence or hypothesis separation is insufficient for a conclusive result"
+    ],
+    "recommended_actions": [
+      "Review missing evidence with the service owner"
+    ],
+    "termination_reason": "llm_failed",
+    "stats": {
+      "termination_reason": "llm_failed",
+      "decision_steps": 1,
+      "tool_calls": 0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "latency_s": 0.492,
+      "ungrounded_citations": 0
+    }
+  },
+  "evidence": [],
+  "events": []
+}

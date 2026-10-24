@@ -1,0 +1,68 @@
+{
+  "run": {
+    "llm": "groq",
+    "model": "qwen/qwen3.8-27b",
+    "wall_clock_s": 600,
+    "llm_timeout_s": 90,
+    "max_tool_calls": 40,
+    "max_tool_retries": 2,
+    "dataset": "C:\\Users\\ksach\\Downloads\\files\\incident_investigator\\synthetic",
+    "case_files": [
+      "inc_002.json"
+    ]
+  },
+  "architectures": {
+    "multi_agent": {
+      "root_cause_accuracy": 0,
+      "evidence_grounding": 1.0,
+      "tool_call_count": 9,
+      "latency_s": 299.5177,
+      "token_consumption": 21767,
+      "ground_truth_accuracy": 0,
+      "cases": 1,
+      "successful_cases": 0,
+      "case_success_rate": 0,
+      "root_cause_cases": 1,
+      "outcome_accuracy": 1,
+      "citation_validity": 1.0,
+      "errors": 0,
+      "total_tool_calls": 9,
+      "total_llm_calls": 18,
+      "total_input_tokens": 16863,
+      "total_output_tokens": 4904,
+      "total_tokens": 21767,
+      "mean_latency_s": 299.5177
+    },
+    "single_agent": {
+      "root_cause_accuracy": 1,
+      "evidence_grounding": 1.0,
+      "tool_call_count": 8,
+      "latency_s": 77.4626,
+      "token_consumption": 16070,
+      "ground_truth_accuracy": 1,
+      "cases": 1,
+      "successful_cases": 1,
+      "case_success_rate": 1,
+      "root_cause_cases": 1,
+      "outcome_accuracy": 1,
+      "citation_validity": 1.0,
+      "errors": 0,
+      "total_tool_calls": 8,
+      "total_llm_calls": 9,
+      "total_input_tokens": 15042,
+      "total_output_tokens": 1028,
+      "total_tokens": 16070,
+      "mean_latency_s": 77.4626
+    }
+  },
+  "winner_by_case_success": "single_agent",
+  "measurement_notes": {
+    "ground_truth_accuracy": "Exact full-answer correctness: expected outcome must match; conclusive targets also require the correct top service AND category. Inconclusive targets require abstention. Binary per case, averaged across all cases. Same criterion as case_success_rate.",
+    "root_cause_accuracy": "Top hypothesis service AND category match ground truth on conclusive-target cases; other cases are N/A. Provider-blocked eligible runs count as incorrect.",
+    "evidence_grounding": "Citation-ID validity proxy only: valid references / (valid + invalid references, including removed citations). Semantic claim support is not automatically assessed. No citations = N/A.",
+    "tool_call_count": "Total attempted tool calls including retries.",
+    "latency_s": "Per-run elapsed seconds; arithmetic mean across selected incidents in the summary.",
+    "token_consumption": "Recorded input + output tokens; excludes failed/canceled requests without recorded usage. Mock counts are estimates.",
+    "errors": "Exceptions escaping the investigator only; inspect termination_reason and report open_issues for internally handled provider failures."
+  }
+}

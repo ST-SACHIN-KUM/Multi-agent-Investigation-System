@@ -1,0 +1,977 @@
+{
+  "incident": {
+    "id": "SYN-009",
+    "title": "Checkout failures with unreliable telemetry",
+    "reported_at": 100,
+    "affected_service": "checkout-api",
+    "description": "Customers report slow or failed checkout requests. Investigate the available evidence."
+  },
+  "world": {
+    "services": {
+      "checkout-api": {
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      },
+      "payment-service": {
+        "depends_on": [
+          "postgres-primary"
+        ]
+      },
+      "recommendation-service": {
+        "depends_on": [
+          "redis-cache"
+        ]
+      },
+      "postgres-primary": {
+        "depends_on": []
+      },
+      "redis-cache": {
+        "depends_on": []
+      }
+    },
+    "logs": [
+      {
+        "ts": 46,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 48,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 52,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 54,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 56,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 58,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 60,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 62,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 64,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 66,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 68,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 70,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 72,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 74,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 76,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 78,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 80,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 82,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 84,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 86,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 88,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 90,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 92,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 94,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 96,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 98,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "database connection pool exhausted after handler release"
+      },
+      {
+        "ts": 56,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 58,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 62,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 64,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 66,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 68,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 72,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 74,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 76,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 78,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 82,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 84,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 86,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 88,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 92,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 94,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 96,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      },
+      {
+        "ts": 98,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream payment-service timeout"
+      }
+    ],
+    "metrics": [
+      {
+        "ts": 0,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 296.03
+      },
+      {
+        "ts": 5,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 299.27
+      },
+      {
+        "ts": 10,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 300.85
+      },
+      {
+        "ts": 15,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 292.83
+      },
+      {
+        "ts": 20,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 300.04
+      },
+      {
+        "ts": 25,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 308.21
+      },
+      {
+        "ts": 30,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 301.13
+      },
+      {
+        "ts": 35,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 300.34
+      },
+      {
+        "ts": 40,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 305.22
+      },
+      {
+        "ts": 45,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 299.12
+      },
+      {
+        "ts": 50,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 295.95
+      },
+      {
+        "ts": 55,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 0,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.88
+      },
+      {
+        "ts": 5,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.39
+      },
+      {
+        "ts": 10,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.61
+      },
+      {
+        "ts": 15,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 123.52
+      },
+      {
+        "ts": 20,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 122.68
+      },
+      {
+        "ts": 25,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.19
+      },
+      {
+        "ts": 30,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.61
+      },
+      {
+        "ts": 35,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.45
+      },
+      {
+        "ts": 40,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.5
+      },
+      {
+        "ts": 45,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 55,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 0,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.79
+      },
+      {
+        "ts": 5,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 77.84
+      },
+      {
+        "ts": 10,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.83
+      },
+      {
+        "ts": 15,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.41
+      },
+      {
+        "ts": 20,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.83
+      },
+      {
+        "ts": 25,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 82.07
+      },
+      {
+        "ts": 30,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.36
+      },
+      {
+        "ts": 35,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.61
+      },
+      {
+        "ts": 40,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.9
+      },
+      {
+        "ts": 45,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.35
+      },
+      {
+        "ts": 50,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.23
+      },
+      {
+        "ts": 55,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.33
+      },
+      {
+        "ts": 60,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.5
+      },
+      {
+        "ts": 65,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.54
+      },
+      {
+        "ts": 70,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.97
+      },
+      {
+        "ts": 75,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.81
+      },
+      {
+        "ts": 80,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.7
+      },
+      {
+        "ts": 85,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.6
+      },
+      {
+        "ts": 90,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.38
+      },
+      {
+        "ts": 95,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 78.56
+      },
+      {
+        "ts": 100,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.5
+      },
+      {
+        "ts": 0,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.42
+      },
+      {
+        "ts": 5,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.22
+      },
+      {
+        "ts": 10,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.66
+      },
+      {
+        "ts": 15,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.14
+      },
+      {
+        "ts": 20,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.47
+      },
+      {
+        "ts": 25,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.5
+      },
+      {
+        "ts": 30,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.56
+      },
+      {
+        "ts": 35,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.16
+      },
+      {
+        "ts": 40,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.74
+      },
+      {
+        "ts": 45,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.9
+      },
+      {
+        "ts": 50,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.51
+      },
+      {
+        "ts": 55,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.27
+      },
+      {
+        "ts": 60,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.47
+      },
+      {
+        "ts": 65,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.85
+      },
+      {
+        "ts": 70,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.7
+      },
+      {
+        "ts": 75,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.89
+      },
+      {
+        "ts": 80,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.43
+      },
+      {
+        "ts": 85,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.93
+      },
+      {
+        "ts": 90,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.51
+      },
+      {
+        "ts": 95,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.63
+      },
+      {
+        "ts": 100,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.43
+      },
+      {
+        "ts": 0,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 97.57
+      },
+      {
+        "ts": 5,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 97.15
+      },
+      {
+        "ts": 10,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.54
+      },
+      {
+        "ts": 15,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.59
+      },
+      {
+        "ts": 20,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.39
+      },
+      {
+        "ts": 25,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.39
+      },
+      {
+        "ts": 30,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.99
+      },
+      {
+        "ts": 35,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.2
+      },
+      {
+        "ts": 40,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.7
+      },
+      {
+        "ts": 45,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.15
+      },
+      {
+        "ts": 50,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 97.17
+      },
+      {
+        "ts": 55,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.7
+      },
+      {
+        "ts": 60,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.03
+      },
+      {
+        "ts": 65,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.83
+      },
+      {
+        "ts": 70,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.71
+      },
+      {
+        "ts": 75,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.93
+      },
+      {
+        "ts": 80,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.8
+      },
+      {
+        "ts": 85,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 97.73
+      },
+      {
+        "ts": 90,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.84
+      },
+      {
+        "ts": 95,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.38
+      },
+      {
+        "ts": 100,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.7
+      }
+    ],
+    "deployments": [
+      {
+        "ts": 40,
+        "service": "payment-service",
+        "type": "deploy",
+        "version": "v-40",
+        "description": "Release payment handler that exhausts the connection pool"
+      }
+    ],
+    "past_incidents": []
+  },
+  "failures": {
+    "seed": 109,
+    "timeout_p": 0.25
+  }
+}

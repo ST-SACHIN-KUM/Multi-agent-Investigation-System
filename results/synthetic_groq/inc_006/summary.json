@@ -1,0 +1,68 @@
+{
+  "run": {
+    "llm": "groq",
+    "model": "qwen/qwen3.8-27b",
+    "wall_clock_s": 600,
+    "llm_timeout_s": 90,
+    "max_tool_calls": 40,
+    "max_tool_retries": 2,
+    "dataset": "C:\\Users\\ksach\\Downloads\\files\\incident_investigator\\synthetic",
+    "case_files": [
+      "inc_006.json"
+    ]
+  },
+  "architectures": {
+    "multi_agent": {
+      "root_cause_accuracy": 0,
+      "evidence_grounding": null,
+      "tool_call_count": 6,
+      "latency_s": 4.7717,
+      "token_consumption": 766,
+      "ground_truth_accuracy": 0,
+      "cases": 1,
+      "successful_cases": 0,
+      "case_success_rate": 0,
+      "root_cause_cases": 1,
+      "outcome_accuracy": 0,
+      "citation_validity": null,
+      "errors": 0,
+      "total_tool_calls": 6,
+      "total_llm_calls": 1,
+      "total_input_tokens": 216,
+      "total_output_tokens": 550,
+      "total_tokens": 766,
+      "mean_latency_s": 4.7717
+    },
+    "single_agent": {
+      "root_cause_accuracy": 0,
+      "evidence_grounding": null,
+      "tool_call_count": 0,
+      "latency_s": 0.4931,
+      "token_consumption": 0,
+      "ground_truth_accuracy": 0,
+      "cases": 1,
+      "successful_cases": 0,
+      "case_success_rate": 0,
+      "root_cause_cases": 1,
+      "outcome_accuracy": 0,
+      "citation_validity": null,
+      "errors": 0,
+      "total_tool_calls": 0,
+      "total_llm_calls": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_tokens": 0,
+      "mean_latency_s": 0.4931
+    }
+  },
+  "winner_by_case_success": "tie",
+  "measurement_notes": {
+    "ground_truth_accuracy": "Exact full-answer correctness: expected outcome must match; conclusive targets also require the correct top service AND category. Inconclusive targets require abstention. Binary per case, averaged across all cases. Same criterion as case_success_rate.",
+    "root_cause_accuracy": "Top hypothesis service AND category match ground truth on conclusive-target cases; other cases are N/A. Provider-blocked eligible runs count as incorrect.",
+    "evidence_grounding": "Citation-ID validity proxy only: valid references / (valid + invalid references, including removed citations). Semantic claim support is not automatically assessed. No citations = N/A.",
+    "tool_call_count": "Total attempted tool calls including retries.",
+    "latency_s": "Per-run elapsed seconds; arithmetic mean across selected incidents in the summary.",
+    "token_consumption": "Recorded input + output tokens; excludes failed/canceled requests without recorded usage. Mock counts are estimates.",
+    "errors": "Exceptions escaping the investigator only; inspect termination_reason and report open_issues for internally handled provider failures."
+  }
+}

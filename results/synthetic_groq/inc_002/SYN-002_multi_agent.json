@@ -1,0 +1,293 @@
+{
+  "metrics": {
+    "incident_id": "SYN-002",
+    "architecture": "multi_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified",
+    "expected_service": "checkout-api",
+    "expected_category": "bad_deploy",
+    "predicted_service": "checkout-api",
+    "predicted_category": "code_regression",
+    "confidence": 0.85,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": true,
+    "case_success": false,
+    "valid_citations": 10,
+    "invalid_citations": 0,
+    "citation_validity": 1.0,
+    "tool_calls": 9,
+    "llm_calls": 18,
+    "input_tokens": 16863,
+    "output_tokens": 4904,
+    "latency_s": 299.5177,
+    "termination_reason": "critic_approved",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": 1.0,
+    "tool_call_count": 9,
+    "token_consumption": 21767,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "critic_approved",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "root_cause_identified"
+  },
+  "ground_truth": {
+    "service": "checkout-api",
+    "category": "bad_deploy",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Checkout parser regression introduced by the release; dependencies remain healthy.",
+    "causal_timeline": [
+      "40: checkout parser release",
+      "45: checkout failures begin"
+    ],
+    "misleading_evidence": [
+      "A dependency warning is isolated and predates the incident."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "root_cause_identified",
+    "summary": "Probable cause: A recent release to checkout-api introduced a regression in the request parser, causing exceptions on valid payloads and subsequent latency spikes.",
+    "hypotheses": [
+      {
+        "id": "H1",
+        "statement": "A recent release to checkout-api introduced a regression in the request parser, causing exceptions on valid payloads and subsequent latency spikes.",
+        "category": "code_regression",
+        "service": "checkout-api",
+        "confidence": 0.85,
+        "supporting": [
+          "E2",
+          "E4",
+          "E3"
+        ],
+        "contradicting": [],
+        "assumptions": [
+          "The incident title 'after release' implies a deployment occurred shortly before ts=45.",
+          "The parser exception is the direct cause of the latency spike (e.g., due to retries, timeouts, or resource contention from error handling)."
+        ]
+      },
+      {
+        "id": "H2",
+        "statement": "A failure or degradation in recommendation-service is causing checkout-api to hang or timeout, leading to latency spikes and parser errors.",
+        "category": "dependency_failure",
+        "service": "recommendation-service",
+        "confidence": 0.1,
+        "supporting": [
+          "E1",
+          "E4"
+        ],
+        "contradicting": [
+          "E2",
+          "E5",
+          "E7"
+        ],
+        "assumptions": [
+          "The lack of logs from recommendation-service indicates a total outage or telemetry failure rather than normal operation.",
+          "checkout-api does not have adequate timeouts or circuit breakers for recommendation-service."
+        ]
+      },
+      {
+        "id": "H3",
+        "statement": "A performance issue in payment-service is causing checkout-api latency spikes.",
+        "category": "dependency_failure",
+        "service": "payment-service",
+        "confidence": 0.05,
+        "supporting": [
+          "E1"
+        ],
+        "contradicting": [
+          "E6"
+        ],
+        "assumptions": [
+          "The single WARN at ts=20 is indicative of a broader, unobserved issue."
+        ]
+      }
+    ],
+    "facts": [
+      "E2",
+      "E4",
+      "E3"
+    ],
+    "assumptions": [
+      "The incident title 'after release' implies a deployment occurred shortly before ts=45.",
+      "The parser exception is the direct cause of the latency spike (e.g., due to retries, timeouts, or resource contention from error handling)."
+    ],
+    "open_issues": [
+      "Critic unavailable: conclusions were not challenged"
+    ],
+    "recommended_actions": [
+      "Review the ranked hypotheses and cited evidence manually"
+    ],
+    "termination_reason": "critic_approved",
+    "stats": {
+      "termination_reason": "critic_approved",
+      "rounds": 3,
+      "tool_calls": 9,
+      "llm_calls": 18,
+      "input_tokens": 16863,
+      "output_tokens": 4904,
+      "latency_s": 299.516,
+      "ungrounded_citations": 0,
+      "tasks": {
+        "done": 10,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": "T1",
+      "source": "dependency",
+      "content": "checkout-api depends on payment-service and recommendation-service.",
+      "kind": "fact",
+      "category": "topology",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "service": "checkout-api",
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ],
+        "depended_on_by": [],
+        "neighbors": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": "T2",
+      "source": "observability",
+      "content": "Sustained ERROR logs for 'request parser exception on valid checkout payload' begin at ts=46 and continue through ts=98.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 46,
+      "meta": {
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload",
+        "count": 27,
+        "last_ts": 98
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms baseline is stable between 291.78 and 303.83 ms from ts 0 to ts 40.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "checkout-api",
+      "ts": 0,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "min": 291.78,
+        "max": 303.83
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": "T3",
+      "source": "observability",
+      "content": "checkout-api latency_p99_ms spikes to 2500 ms at ts 45 and remains at 2500 ms through ts 100, indicating a sustained deviation from baseline.",
+      "kind": "fact",
+      "category": "onset",
+      "service": "checkout-api",
+      "ts": 45,
+      "meta": {
+        "metric": "latency_p99_ms",
+        "baseline_range": [
+          291.78,
+          303.83
+        ],
+        "deviation_value": 2500,
+        "duration": 55
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "query_logs(recommendation-service) returned no rows (a genuine absence and a telemetry gap look identical)",
+      "kind": "fact",
+      "category": "gap",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "empty"
+      }
+    },
+    {
+      "id": "E6",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "payment-service logged a single WARN at ts=20 indicating a slow query that recovered; no sustained deviation observed.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "payment-service",
+      "ts": 20,
+      "meta": {
+        "level": "WARN",
+        "message": "single slow query; recovered"
+      }
+    },
+    {
+      "id": "E7",
+      "task_id": "T4",
+      "source": "observability",
+      "content": "recommendation-service returned no log rows for the queried range.",
+      "kind": "fact",
+      "category": "stable",
+      "service": "recommendation-service",
+      "ts": null,
+      "meta": {
+        "completeness": "empty"
+      }
+    }
+  ],
+  "events": [
+    "[  2.46s r0] plan: [('T1', 'topology', []), ('T2', 'scan_logs', []), ('T3', 'scan_metrics', []), ('T4', 'scan_logs', ['T1']), ('T5', 'scan_metrics', ['T1'])]",
+    "[  2.46s r0] running in parallel: ['T1:topology', 'T2:scan_logs', 'T3:scan_metrics']",
+    "[  3.78s r0] running in parallel: ['T4:scan_logs', 'T5:scan_metrics']",
+    "[ 24.28s r0] T4 (scan_logs) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5qjhmphefsbzry3fgpwg235` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Used 651, Requested 545. Please try again in 11.76s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[ 46.17s r0] reasoning: 3 hypotheses, top=checkout-api (0.95)",
+    "[ 74.74s r0] critic: challenge; issues=4 requests=2",
+    "[ 74.74s r1] new task T6 scan_metrics {'service': 'checkout-api', 'metrics': ['error_rate', 'success_rate', 'cpu_usage', 'thread_pool_active'], 'start': 0, 'end': 100} <- critic: To determine if the latency spike is correlated with resource exhaustion (CPU, threads) which could be the root cause of both the parser errors and the latency, or if the error rate is directly tied to the parser exceptions.",
+    "[ 74.74s r1] new task T7 scan_logs {'service': 'recommendation-service', 'start': 0, 'end': 100, 'level': 'ALL'} <- critic: To re-verify the telemetry gap in recommendation-service. If logs are truly absent, it may indicate a total outage or a logging configuration change, which could be a contributing factor to the checkout-api latency if it is a synchronous dependency.",
+    "[ 74.74s r1] running in parallel: ['T6:scan_metrics', 'T7:scan_logs']",
+    "[ 74.74s r1] observability: topology for None missing; scanning degraded (skipped neighbours)",
+    "[ 74.74s r1] observability: topology for None missing; scanning degraded (skipped neighbours)",
+    "[119.70s r1] reasoning: 3 hypotheses, top=checkout-api (0.85)",
+    "[139.45s r1] critic: challenge; issues=4 requests=2",
+    "[139.45s r2] new task T8 scan_metrics {'service': 'checkout-api', 'metrics': ['cpu_usage', 'memory_usage', 'thread_pool_active', 'gc_pause_time'], 'start': 40, 'end': 100} <- critic: To determine if the latency spike is due to resource exhaustion (supporting H1) or if the service is waiting on external calls (supporting H2/H3).",
+    "[139.45s r2] new task T9 scan_metrics {'service': 'recommendation-service', 'metrics': ['latency_p99_ms', 'error_rate', 'availability'], 'start': 0, 'end': 100} <- critic: To check if recommendation-service is actually failing or degraded, despite the lack of logs. If it is down, H2 becomes a strong competitor.",
+    "[139.45s r2] running in parallel: ['T8:scan_metrics', 'T9:scan_metrics']",
+    "[139.45s r2] observability: topology for None missing; scanning degraded (skipped neighbours)",
+    "[139.45s r2] observability: topology for None missing; scanning degraded (skipped neighbours)",
+    "[183.18s r2] reasoning: 3 hypotheses, top=checkout-api (0.75)",
+    "[213.18s r2] critic: challenge; issues=3 requests=1",
+    "[213.18s r3] new task T10 scan_metrics {'service': 'checkout-api', 'metrics': ['error_rate', 'cpu_usage', 'memory_usage', 'thread_pool_active'], 'start': 40, 'end': 100} <- critic: To determine if the latency spike is due to resource exhaustion (supporting a code regression causing resource leaks or busy loops) or if it is a downstream wait (which would suggest a dependency issue despite the parser error).",
+    "[213.18s r3] running in parallel: ['T10:scan_metrics']",
+    "[213.18s r3] observability: topology for None missing; scanning degraded (skipped neighbours)",
+    "[241.75s r3] reasoning: 3 hypotheses, top=checkout-api (0.85)",
+    "[262.12s r3] critic FAILED (RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5qjhmphefsbzry3fgpwg235` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Used 395, Requested 665. Please try again in 3.599999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}); terminating with caveat",
+    "[262.12s r3] critic: approve; issues=1 requests=0",
+    "[299.52s r3] reporting: narrative failed (Error code: 503 - {'error': {'message': 'qwen/qwen3.8-27b is currently over capacity. Please try again and back off exponentially. Visit https://groqstatus.com to see if there is an active incident.', 'type': 'internal_server_error'}}); using fallback text"
+  ]
+}

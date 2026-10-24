@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "incident_id": "SYN-007",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "error",
+    "expected_service": "redis-cache",
+    "expected_category": "resource_exhaustion",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 19,
+    "llm_calls": 19,
+    "input_tokens": 71873,
+    "output_tokens": 1139,
+    "latency_s": 600.0267,
+    "termination_reason": "error",
+    "error": "Overall investigation deadline reached",
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 19,
+    "token_consumption": 73012,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "error",
+    "error": "Overall investigation deadline reached",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "error"
+  },
+  "ground_truth": {
+    "service": "redis-cache",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Cache memory exhaustion triggers an eviction storm, degrading recommendations and then checkout; payment remains healthy.",
+    "causal_timeline": [
+      "30: cache hit rate collapses",
+      "40: recommendations degrade",
+      "50: checkout timeouts",
+      "60: unrelated payment release"
+    ],
+    "misleading_evidence": [
+      "Historical checkout deployment explanation has no matching current checkout change.",
+      "Payment deployment follows the symptoms and payment metrics remain healthy."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": null,
+  "evidence": [],
+  "events": []
+}

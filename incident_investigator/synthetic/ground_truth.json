@@ -1,0 +1,269 @@
+{
+  "SYN-001": {
+    "service": "postgres-primary",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Database CPU saturation starts first, causing payment query timeouts and then checkout failures along the dependency path.",
+    "causal_timeline": [
+      "30: database CPU saturation",
+      "40: payment query timeouts",
+      "50: checkout timeouts",
+      "55: unrelated recommendation release"
+    ],
+    "misleading_evidence": [
+      "Recommendation deployment occurs after the symptoms and its metrics remain healthy."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-002": {
+    "service": "checkout-api",
+    "category": "bad_deploy",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Checkout parser regression introduced by the release; dependencies remain healthy.",
+    "causal_timeline": [
+      "40: checkout parser release",
+      "45: checkout failures begin"
+    ],
+    "misleading_evidence": [
+      "A dependency warning is isolated and predates the incident."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-003": {
+    "service": "postgres-primary",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Database CPU saturation precedes payment and checkout failures along the dependency path.",
+    "causal_timeline": [
+      "35: database saturation",
+      "45: payment timeouts",
+      "55: checkout timeouts",
+      "60: unrelated checkout release"
+    ],
+    "misleading_evidence": [
+      "Checkout deployment happened after the first symptoms."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-004": {
+    "service": "redis-cache",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Cache eviction storm degrades recommendations and then checkout, despite a misleading past incident.",
+    "causal_timeline": [
+      "35: cache hit rate collapses",
+      "45: recommendations degrade",
+      "55: checkout degrades"
+    ],
+    "misleading_evidence": [
+      "Historical payment deployment explanation has no matching current change."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-005": {
+    "service": "payment-service",
+    "category": "dependency_failure",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Payment gateway TLS certificate expiration breaks payment connectivity; normal CPU does not rule this out.",
+    "causal_timeline": [
+      "40: payment TLS failures",
+      "50: checkout failures"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [
+      "Payment CPU remains normal while connection errors and latency increase; these measure different failure modes."
+    ],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-006": {
+    "service": "payment-service",
+    "category": "bad_config",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Wrong database endpoint in payment configuration; process liveness is healthy while functional requests fail.",
+    "causal_timeline": [
+      "40: endpoint changed",
+      "45: functional errors",
+      "46: shallow probe reports healthy",
+      "55: checkout fails"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [
+      "Healthy liveness probe conflicts with request failures because it excludes the database."
+    ],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-007": {
+    "service": "redis-cache",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Cache memory exhaustion triggers an eviction storm, degrading recommendations and then checkout; payment remains healthy.",
+    "causal_timeline": [
+      "30: cache hit rate collapses",
+      "40: recommendations degrade",
+      "50: checkout timeouts",
+      "60: unrelated payment release"
+    ],
+    "misleading_evidence": [
+      "Historical checkout deployment explanation has no matching current checkout change.",
+      "Payment deployment follows the symptoms and payment metrics remain healthy."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-008": {
+    "service": "redis-cache",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Cache memory exhaustion causes sustained evictions and a falling hit rate, degrading recommendations and then checkout; database and payment metrics remain healthy.",
+    "causal_timeline": [
+      "40: cache hit rate collapses",
+      "50: recommendations degrade",
+      "60: checkout timeouts",
+      "65: unrelated checkout release"
+    ],
+    "misleading_evidence": [
+      "Keyword-matching historical database incident contradicts healthy current database measurements.",
+      "Checkout deployment occurs after the symptoms and cannot explain their onset."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-009": {
+    "service": "payment-service",
+    "category": "bad_deploy",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Payment handler release exhausts the connection pool, preceding downstream checkout degradation.",
+    "causal_timeline": [
+      "40: payment handler release",
+      "45: payment degradation",
+      "55: checkout degradation"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [],
+    "tool_failures": [
+      "Seeded transient timeouts can affect any query; successful retries provide evidence."
+    ],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-010": {
+    "service": "postgres-primary",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Database CPU saturation starts first, causing payment query timeouts and then checkout failures along the dependency path, as in SYN-001. Logs are unavailable, so use metric onset timing and topology and preserve uncertainty from truncated results.",
+    "causal_timeline": [
+      "30: database CPU saturation",
+      "40: payment query timeouts",
+      "50: checkout timeouts",
+      "55: unrelated recommendation release"
+    ],
+    "misleading_evidence": [
+      "Recommendation deployment occurs after the symptoms and its metrics remain healthy."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [
+      "Log queries always time out; some other tool responses are truncated."
+    ],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "SYN-011": {
+    "service": null,
+    "category": "unknown",
+    "expected_outcome": "inconclusive",
+    "root_cause": "No unique root cause is specified by this observable world; conflicting upstream probes cannot distinguish the candidates.",
+    "causal_timeline": [
+      "50: contradictory probes for both upstream services",
+      "55: checkout failures"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [
+      "Same-time healthy and unhealthy probes for both candidates, without scope or timing validation."
+    ],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Restore telemetry and escalate for missing evidence"
+    ]
+  },
+  "SYN-012": {
+    "service": "payment-service",
+    "category": "bad_config",
+    "expected_outcome": "inconclusive",
+    "root_cause": "Hidden causal event is a bad payment database endpoint; all tools fail, so an agent must not claim it has established this cause.",
+    "causal_timeline": [
+      "40: hidden endpoint change",
+      "45: hidden payment errors",
+      "55: hidden checkout errors"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [],
+    "tool_failures": [
+      "All investigation tools always time out; no supporting evidence can be retrieved."
+    ],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Restore telemetry and escalate for missing evidence"
+    ]
+  }
+}

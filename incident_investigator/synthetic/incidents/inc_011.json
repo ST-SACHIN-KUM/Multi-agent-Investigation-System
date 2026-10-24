@@ -1,0 +1,326 @@
+{
+  "incident": {
+    "id": "SYN-011",
+    "title": "Checkout outage with contradictory upstream probes",
+    "reported_at": 100,
+    "affected_service": "checkout-api",
+    "description": "Customers report slow or failed checkout requests. Investigate the available evidence."
+  },
+  "world": {
+    "services": {
+      "checkout-api": {
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      },
+      "payment-service": {
+        "depends_on": [
+          "postgres-primary"
+        ]
+      },
+      "recommendation-service": {
+        "depends_on": [
+          "redis-cache"
+        ]
+      },
+      "postgres-primary": {
+        "depends_on": []
+      },
+      "redis-cache": {
+        "depends_on": []
+      }
+    },
+    "logs": [
+      {
+        "ts": 56,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 58,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 62,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 64,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 66,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 68,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 72,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 74,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 76,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 78,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 82,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 84,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 86,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 88,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 92,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 94,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 96,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 98,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream request failed; target not recorded"
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "level": "ERROR",
+        "message": "probe A reports service unavailable"
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "level": "WARN",
+        "message": "probe B reports service healthy; probe scope and clock alignment unavailable"
+      },
+      {
+        "ts": 50,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "probe A reports service unavailable"
+      },
+      {
+        "ts": 50,
+        "service": "recommendation-service",
+        "level": "WARN",
+        "message": "probe B reports service healthy; probe scope and clock alignment unavailable"
+      }
+    ],
+    "metrics": [
+      {
+        "ts": 0,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 305.89
+      },
+      {
+        "ts": 5,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 294.83
+      },
+      {
+        "ts": 10,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 307.97
+      },
+      {
+        "ts": 15,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 299.89
+      },
+      {
+        "ts": 20,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 298.16
+      },
+      {
+        "ts": 25,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 302.11
+      },
+      {
+        "ts": 30,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 294.05
+      },
+      {
+        "ts": 35,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 294.49
+      },
+      {
+        "ts": 40,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 298.59
+      },
+      {
+        "ts": 45,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 295.13
+      },
+      {
+        "ts": 50,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 303.07
+      },
+      {
+        "ts": 55,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      }
+    ],
+    "deployments": [],
+    "past_incidents": []
+  },
+  "failures": {
+    "seed": 111
+  }
+}

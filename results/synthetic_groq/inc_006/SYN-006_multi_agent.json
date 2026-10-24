@@ -1,0 +1,186 @@
+{
+  "metrics": {
+    "incident_id": "SYN-006",
+    "architecture": "multi_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive",
+    "expected_service": "payment-service",
+    "expected_category": "bad_config",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 6,
+    "llm_calls": 1,
+    "input_tokens": 216,
+    "output_tokens": 550,
+    "latency_s": 4.7717,
+    "termination_reason": "critic_approved",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 6,
+    "token_consumption": 766,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "critic_approved",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive"
+  },
+  "ground_truth": {
+    "service": "payment-service",
+    "category": "bad_config",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Wrong database endpoint in payment configuration; process liveness is healthy while functional requests fail.",
+    "causal_timeline": [
+      "40: endpoint changed",
+      "45: functional errors",
+      "46: shallow probe reports healthy",
+      "55: checkout fails"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [
+      "Healthy liveness probe conflicts with request failures because it excludes the database."
+    ],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "inconclusive",
+    "summary": "Inconclusive (report narrative unavailable).",
+    "hypotheses": [],
+    "facts": [],
+    "assumptions": [],
+    "open_issues": [
+      "Critic unavailable: conclusions were not challenged",
+      "No hypotheses could be formed from the evidence"
+    ],
+    "recommended_actions": [
+      "Review the ranked hypotheses and cited evidence manually"
+    ],
+    "termination_reason": "critic_approved",
+    "stats": {
+      "termination_reason": "critic_approved",
+      "rounds": 0,
+      "tool_calls": 6,
+      "llm_calls": 1,
+      "input_tokens": 216,
+      "output_tokens": 550,
+      "latency_s": 4.77,
+      "ungrounded_citations": 0,
+      "tasks": {
+        "done": 0,
+        "failed": 5,
+        "skipped": 0
+      }
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": "T1",
+      "source": "orchestrator",
+      "content": "Task topology {'service': 'checkout-api'} failed after 2 attempts; evidence missing",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "get_dependencies",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E2",
+      "task_id": "T2",
+      "source": "orchestrator",
+      "content": "Task scan_logs {'services': ['checkout-api'], 'start': 0, 'end': 100} failed after 2 attempts; evidence missing",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E3",
+      "task_id": "T3",
+      "source": "orchestrator",
+      "content": "Task scan_metrics {'services': ['checkout-api'], 'start': 0, 'end': 100} failed after 2 attempts; evidence missing",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E4",
+      "task_id": "T5",
+      "source": "orchestrator",
+      "content": "Task scan_metrics {'neighbors_of': 'checkout-api', 'start': 0, 'end': 100} failed after 2 attempts; evidence missing",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "query_metrics",
+        "completeness": "failed"
+      }
+    },
+    {
+      "id": "E5",
+      "task_id": "T4",
+      "source": "orchestrator",
+      "content": "Task scan_logs {'neighbors_of': 'checkout-api', 'start': 0, 'end': 100} failed after 2 attempts; evidence missing",
+      "kind": "fact",
+      "category": "gap",
+      "service": null,
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "completeness": "failed"
+      }
+    }
+  ],
+  "events": [
+    "[  1.83s r0] plan: [('T1', 'topology', []), ('T2', 'scan_logs', []), ('T3', 'scan_metrics', []), ('T4', 'scan_logs', ['T1']), ('T5', 'scan_metrics', ['T1'])]",
+    "[  1.83s r0] running in parallel: ['T1:topology', 'T2:scan_logs', 'T3:scan_metrics']",
+    "[  2.00s r0] T1 (topology) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199586, Requested 794. Please try again in 2m44.16s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  2.23s r0] T1 (topology) attempt 2 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199585, Requested 794. Please try again in 2m43.728s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  2.37s r0] T3 (scan_metrics) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199585, Requested 1530. Please try again in 8m1.68s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  2.37s r0] T2 (scan_logs) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199585, Requested 1397. Please try again in 7m4.224s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  2.72s r0] T2 (scan_logs) attempt 2 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199584, Requested 1266. Please try again in 6m7.2s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  2.72s r0] T3 (scan_metrics) attempt 2 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199584, Requested 1471. Please try again in 7m35.76s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  2.77s r0] running in parallel: ['T4:scan_logs', 'T5:scan_metrics']",
+    "[  2.77s r0] observability: topology for checkout-api missing; scanning degraded (skipped neighbours)",
+    "[  2.77s r0] observability: topology for checkout-api missing; scanning degraded (skipped neighbours)",
+    "[  2.93s r0] T5 (scan_metrics) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199584, Requested 720. Please try again in 2m11.328s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  2.96s r0] observability: topology for checkout-api missing; scanning degraded (skipped neighbours)",
+    "[  2.98s r0] T4 (scan_logs) attempt 1 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199584, Requested 720. Please try again in 2m11.328s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  3.01s r0] observability: topology for checkout-api missing; scanning degraded (skipped neighbours)",
+    "[  3.13s r0] T5 (scan_metrics) attempt 2 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199583, Requested 779. Please try again in 2m36.384s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  3.13s r0] T4 (scan_logs) attempt 2 failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199583, Requested 779. Please try again in 2m36.384s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "[  4.06s r0] reasoning FAILED (RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199583, Requested 1483. Please try again in 7m40.511999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}); keeping previous hypotheses",
+    "[  4.47s r0] critic FAILED (RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199581, Requested 1416. Please try again in 7m10.704s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}); terminating with caveat",
+    "[  4.47s r0] critic: approve; issues=1 requests=0",
+    "[  4.77s r0] reporting: narrative failed (Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m5q77v1be1zawmmsyqtvp3kh` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199580, Requested 744. Please try again in 2m19.968s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}); using fallback text"
+  ]
+}

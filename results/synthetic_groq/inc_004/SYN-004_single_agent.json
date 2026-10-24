@@ -1,0 +1,63 @@
+{
+  "metrics": {
+    "incident_id": "SYN-004",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "error",
+    "expected_service": "redis-cache",
+    "expected_category": "resource_exhaustion",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 20,
+    "llm_calls": 20,
+    "input_tokens": 71744,
+    "output_tokens": 1141,
+    "latency_s": 599.9961,
+    "termination_reason": "error",
+    "error": "Overall investigation deadline reached",
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 20,
+    "token_consumption": 72885,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "error",
+    "error": "Overall investigation deadline reached",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "error"
+  },
+  "ground_truth": {
+    "service": "redis-cache",
+    "category": "resource_exhaustion",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Cache eviction storm degrades recommendations and then checkout, despite a misleading past incident.",
+    "causal_timeline": [
+      "35: cache hit rate collapses",
+      "45: recommendations degrade",
+      "55: checkout degrades"
+    ],
+    "misleading_evidence": [
+      "Historical payment deployment explanation has no matching current change."
+    ],
+    "conflicting_observations": [],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": null,
+  "evidence": [],
+  "events": []
+}

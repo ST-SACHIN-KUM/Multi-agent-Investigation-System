@@ -1,0 +1,1234 @@
+{
+  "incident": {
+    "id": "SYN-007",
+    "title": "Checkout timeouts following cache eviction failures",
+    "reported_at": 100,
+    "affected_service": "checkout-api",
+    "description": "Customers report slow or failed checkout requests. Investigate the available evidence."
+  },
+  "world": {
+    "services": {
+      "checkout-api": {
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      },
+      "payment-service": {
+        "depends_on": [
+          "postgres-primary"
+        ]
+      },
+      "recommendation-service": {
+        "depends_on": [
+          "redis-cache"
+        ]
+      },
+      "postgres-primary": {
+        "depends_on": []
+      },
+      "redis-cache": {
+        "depends_on": []
+      }
+    },
+    "logs": [
+      {
+        "ts": 31,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 33,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 35,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 37,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 39,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 41,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 43,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 45,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 47,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 49,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 51,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 53,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 55,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 57,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 59,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 61,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 63,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 65,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 67,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 69,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 71,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 73,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 75,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 77,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 79,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 81,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 83,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 85,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 87,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 89,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 91,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 93,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 95,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 97,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 99,
+        "service": "redis-cache",
+        "level": "ERROR",
+        "message": "memory exhausted; continuous cache eviction storm"
+      },
+      {
+        "ts": 41,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 43,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 45,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 47,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 49,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 51,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 53,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 55,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 57,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 59,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 61,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 63,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 65,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 67,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 69,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 71,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 73,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 75,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 77,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 79,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 81,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 83,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 85,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 87,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 89,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 91,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 93,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 95,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 97,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 99,
+        "service": "recommendation-service",
+        "level": "ERROR",
+        "message": "upstream redis-cache timeout"
+      },
+      {
+        "ts": 51,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 53,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 55,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 57,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 59,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 61,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 63,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 65,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 67,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 69,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 71,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 73,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 75,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 77,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 79,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 81,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 83,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 85,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 87,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 89,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 91,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 93,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 95,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 97,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      },
+      {
+        "ts": 99,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "upstream recommendation-service timeout"
+      }
+    ],
+    "metrics": [
+      {
+        "ts": 0,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 295.44
+      },
+      {
+        "ts": 5,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 301.46
+      },
+      {
+        "ts": 10,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 308.5
+      },
+      {
+        "ts": 15,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 302.84
+      },
+      {
+        "ts": 20,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 299.69
+      },
+      {
+        "ts": 25,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 296.56
+      },
+      {
+        "ts": 30,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 293.48
+      },
+      {
+        "ts": 35,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 308.98
+      },
+      {
+        "ts": 40,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 304.58
+      },
+      {
+        "ts": 45,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 295.5
+      },
+      {
+        "ts": 50,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 55,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 0,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 116.95
+      },
+      {
+        "ts": 5,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.56
+      },
+      {
+        "ts": 10,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.95
+      },
+      {
+        "ts": 15,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.5
+      },
+      {
+        "ts": 20,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.35
+      },
+      {
+        "ts": 25,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.15
+      },
+      {
+        "ts": 30,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.44
+      },
+      {
+        "ts": 35,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 122.56
+      },
+      {
+        "ts": 40,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.1
+      },
+      {
+        "ts": 45,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.81
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.28
+      },
+      {
+        "ts": 55,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.5
+      },
+      {
+        "ts": 60,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.55
+      },
+      {
+        "ts": 65,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 122.01
+      },
+      {
+        "ts": 70,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 122.47
+      },
+      {
+        "ts": 75,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.67
+      },
+      {
+        "ts": 80,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 122.8
+      },
+      {
+        "ts": 85,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.64
+      },
+      {
+        "ts": 90,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.55
+      },
+      {
+        "ts": 95,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.08
+      },
+      {
+        "ts": 100,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.48
+      },
+      {
+        "ts": 0,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.52
+      },
+      {
+        "ts": 5,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.37
+      },
+      {
+        "ts": 10,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.95
+      },
+      {
+        "ts": 15,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.43
+      },
+      {
+        "ts": 20,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 82.28
+      },
+      {
+        "ts": 25,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.84
+      },
+      {
+        "ts": 30,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.88
+      },
+      {
+        "ts": 35,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.44
+      },
+      {
+        "ts": 40,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 45,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 50,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 55,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 0,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.97
+      },
+      {
+        "ts": 5,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 33.98
+      },
+      {
+        "ts": 10,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.79
+      },
+      {
+        "ts": 15,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.51
+      },
+      {
+        "ts": 20,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.08
+      },
+      {
+        "ts": 25,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.25
+      },
+      {
+        "ts": 30,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.49
+      },
+      {
+        "ts": 35,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.76
+      },
+      {
+        "ts": 40,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.76
+      },
+      {
+        "ts": 45,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.36
+      },
+      {
+        "ts": 50,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.79
+      },
+      {
+        "ts": 55,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.88
+      },
+      {
+        "ts": 60,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.88
+      },
+      {
+        "ts": 65,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.77
+      },
+      {
+        "ts": 70,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.87
+      },
+      {
+        "ts": 75,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.83
+      },
+      {
+        "ts": 80,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.9
+      },
+      {
+        "ts": 85,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.82
+      },
+      {
+        "ts": 90,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.81
+      },
+      {
+        "ts": 95,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.89
+      },
+      {
+        "ts": 100,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.56
+      },
+      {
+        "ts": 0,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 97.72
+      },
+      {
+        "ts": 5,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.98
+      },
+      {
+        "ts": 10,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.6
+      },
+      {
+        "ts": 15,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.62
+      },
+      {
+        "ts": 20,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.9
+      },
+      {
+        "ts": 25,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.53
+      },
+      {
+        "ts": 30,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 35,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 40,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 45,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 50,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 55,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 60,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 65,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 70,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 75,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 80,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 85,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 90,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 95,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      },
+      {
+        "ts": 100,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 20
+      }
+    ],
+    "deployments": [
+      {
+        "ts": 60,
+        "service": "payment-service",
+        "type": "deploy",
+        "version": "v-60",
+        "description": "Refresh payment response labels"
+      }
+    ],
+    "past_incidents": [
+      {
+        "id": "HIST-CHECKOUT-007",
+        "summary": "checkout latency caused by checkout serialization release",
+        "tags": [
+          "checkout",
+          "latency",
+          "timeout"
+        ],
+        "root_cause": "checkout serialization regression",
+        "root_cause_category": "bad_deploy"
+      }
+    ]
+  },
+  "failures": {
+    "seed": 107
+  }
+}

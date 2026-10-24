@@ -1,0 +1,268 @@
+{
+  "metrics": {
+    "incident_id": "SYN-005",
+    "architecture": "single_agent",
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive",
+    "expected_service": "payment-service",
+    "expected_category": "dependency_failure",
+    "predicted_service": null,
+    "predicted_category": null,
+    "confidence": null,
+    "root_cause_eligible": true,
+    "root_cause_correct": false,
+    "outcome_correct": false,
+    "case_success": false,
+    "valid_citations": 0,
+    "invalid_citations": 0,
+    "citation_validity": null,
+    "tool_calls": 1,
+    "llm_calls": 1,
+    "input_tokens": 522,
+    "output_tokens": 58,
+    "latency_s": 17.6953,
+    "termination_reason": "llm_failed",
+    "error": null,
+    "root_cause_accuracy": 0,
+    "evidence_grounding": null,
+    "tool_call_count": 1,
+    "token_consumption": 580,
+    "ground_truth_accuracy": 0
+  },
+  "diagnostics": {
+    "termination_reason": "llm_failed",
+    "error": null,
+    "expected_outcome": "root_cause_identified",
+    "outcome": "inconclusive"
+  },
+  "ground_truth": {
+    "service": "payment-service",
+    "category": "dependency_failure",
+    "expected_outcome": "root_cause_identified",
+    "root_cause": "Payment gateway TLS certificate expiration breaks payment connectivity; normal CPU does not rule this out.",
+    "causal_timeline": [
+      "40: payment TLS failures",
+      "50: checkout failures"
+    ],
+    "misleading_evidence": [],
+    "conflicting_observations": [
+      "Payment CPU remains normal while connection errors and latency increase; these measure different failure modes."
+    ],
+    "tool_failures": [],
+    "expected_investigation": "Compare causal timing and dependency paths; cite retrieved observations; distinguish assumptions and gaps.",
+    "recommended_actions": [
+      "Validate the causal mechanism with the owning service team",
+      "Revert the identified change or mitigate the identified dependency/resource failure",
+      "Verify error and latency recovery"
+    ]
+  },
+  "report": {
+    "outcome": "inconclusive",
+    "summary": "Inconclusive. Investigation stopped before a final answer; review collected observations.",
+    "hypotheses": [],
+    "facts": [],
+    "assumptions": [],
+    "open_issues": [
+      "Single-agent decision failed: RateLimitError",
+      "Evidence or hypothesis separation is insufficient for a conclusive result"
+    ],
+    "recommended_actions": [
+      "Review missing evidence with the service owner"
+    ],
+    "termination_reason": "llm_failed",
+    "stats": {
+      "termination_reason": "llm_failed",
+      "decision_steps": 2,
+      "tool_calls": 1,
+      "llm_calls": 1,
+      "input_tokens": 522,
+      "output_tokens": 58,
+      "latency_s": 17.694,
+      "ungrounded_citations": 0
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "task_id": null,
+      "source": "single_agent",
+      "content": "Observation 1: query_logs {'service': 'checkout-api', 'start': 0, 'end': 100, 'min_level': 'WARN', 'limit': 200}",
+      "kind": "fact",
+      "category": "tool_result",
+      "service": "checkout-api",
+      "ts": null,
+      "meta": {
+        "tool": "query_logs",
+        "args": {
+          "service": "checkout-api",
+          "start": 0,
+          "end": 100,
+          "min_level": "WARN",
+          "limit": 200
+        },
+        "result": {
+          "tool": "query_logs",
+          "ok": true,
+          "data": [
+            {
+              "ts": 51,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 53,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 55,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 57,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 59,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 61,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 63,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 65,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 67,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 69,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 71,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 73,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 75,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 77,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 79,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 81,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 83,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 85,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 87,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 89,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 91,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 93,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 95,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 97,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            },
+            {
+              "ts": 99,
+              "service": "checkout-api",
+              "level": "ERROR",
+              "message": "upstream payment-service timeout"
+            }
+          ],
+          "completeness": "full",
+          "error": null,
+          "attempts": 1
+        }
+      }
+    }
+  ],
+  "events": [
+    "[ 17.50s r0] E1: query_logs -> full"
+  ]
+}

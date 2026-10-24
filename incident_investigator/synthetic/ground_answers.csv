@@ -1,0 +1,13 @@
+incident_id,service,category,expected_outcome,root_cause
+SYN-001,postgres-primary,resource_exhaustion,root_cause_identified,"Database CPU saturation starts first, causing payment query timeouts and then checkout failures along the dependency path."
+SYN-002,checkout-api,bad_deploy,root_cause_identified,Checkout parser regression introduced by the release; dependencies remain healthy.
+SYN-003,postgres-primary,resource_exhaustion,root_cause_identified,Database CPU saturation precedes payment and checkout failures along the dependency path.
+SYN-004,redis-cache,resource_exhaustion,root_cause_identified,"Cache eviction storm degrades recommendations and then checkout, despite a misleading past incident."
+SYN-005,payment-service,dependency_failure,root_cause_identified,Payment gateway TLS certificate expiration breaks payment connectivity; normal CPU does not rule this out.
+SYN-006,payment-service,bad_config,root_cause_identified,Wrong database endpoint in payment configuration; process liveness is healthy while functional requests fail.
+SYN-007,redis-cache,resource_exhaustion,root_cause_identified,"Cache memory exhaustion triggers an eviction storm, degrading recommendations and then checkout; payment remains healthy."
+SYN-008,redis-cache,resource_exhaustion,root_cause_identified,"Cache memory exhaustion causes sustained evictions and a falling hit rate, degrading recommendations and then checkout; database and payment metrics remain healthy."
+SYN-009,payment-service,bad_deploy,root_cause_identified,"Payment handler release exhausts the connection pool, preceding downstream checkout degradation."
+SYN-010,postgres-primary,resource_exhaustion,root_cause_identified,"Database CPU saturation starts first, causing payment query timeouts and then checkout failures along the dependency path, as in SYN-001. Logs are unavailable, so use metric onset timing and topology and preserve uncertainty from truncated results."
+SYN-011,,unknown,inconclusive,No unique root cause is specified by this observable world; conflicting upstream probes cannot distinguish the candidates.
+SYN-012,payment-service,bad_config,inconclusive,"Hidden causal event is a bad payment database endpoint; all tools fail, so an agent must not claim it has established this cause."

@@ -1,0 +1,850 @@
+{
+  "incident": {
+    "id": "SYN-002",
+    "title": "Checkout submission failures after release",
+    "reported_at": 100,
+    "affected_service": "checkout-api",
+    "description": "Customers report slow or failed checkout requests. Investigate the available evidence."
+  },
+  "world": {
+    "services": {
+      "checkout-api": {
+        "depends_on": [
+          "payment-service",
+          "recommendation-service"
+        ]
+      },
+      "payment-service": {
+        "depends_on": [
+          "postgres-primary"
+        ]
+      },
+      "recommendation-service": {
+        "depends_on": [
+          "redis-cache"
+        ]
+      },
+      "postgres-primary": {
+        "depends_on": []
+      },
+      "redis-cache": {
+        "depends_on": []
+      }
+    },
+    "logs": [
+      {
+        "ts": 46,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 48,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 50,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 52,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 54,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 56,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 58,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 62,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 64,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 66,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 68,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 72,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 74,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 76,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 78,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 82,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 84,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 86,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 88,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 92,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 94,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 96,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 98,
+        "service": "checkout-api",
+        "level": "ERROR",
+        "message": "request parser exception on valid checkout payload"
+      },
+      {
+        "ts": 20,
+        "service": "payment-service",
+        "level": "WARN",
+        "message": "single slow query; recovered"
+      }
+    ],
+    "metrics": [
+      {
+        "ts": 0,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 293.67
+      },
+      {
+        "ts": 5,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 302.09
+      },
+      {
+        "ts": 10,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 294.05
+      },
+      {
+        "ts": 15,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 303.83
+      },
+      {
+        "ts": 20,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 301.94
+      },
+      {
+        "ts": 25,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 297.92
+      },
+      {
+        "ts": 30,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 302.11
+      },
+      {
+        "ts": 35,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 301.19
+      },
+      {
+        "ts": 40,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 291.78
+      },
+      {
+        "ts": 45,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 50,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 55,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 60,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 65,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 70,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 75,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 80,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 85,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 90,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 95,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 100,
+        "service": "checkout-api",
+        "metric": "latency_p99_ms",
+        "value": 2500
+      },
+      {
+        "ts": 0,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.01
+      },
+      {
+        "ts": 5,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.0
+      },
+      {
+        "ts": 10,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.22
+      },
+      {
+        "ts": 15,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.45
+      },
+      {
+        "ts": 20,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.87
+      },
+      {
+        "ts": 25,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.94
+      },
+      {
+        "ts": 30,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.23
+      },
+      {
+        "ts": 35,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.17
+      },
+      {
+        "ts": 40,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.06
+      },
+      {
+        "ts": 45,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 118.8
+      },
+      {
+        "ts": 50,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.35
+      },
+      {
+        "ts": 55,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.07
+      },
+      {
+        "ts": 60,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 121.78
+      },
+      {
+        "ts": 65,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.5
+      },
+      {
+        "ts": 70,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.27
+      },
+      {
+        "ts": 75,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 122.93
+      },
+      {
+        "ts": 80,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.6
+      },
+      {
+        "ts": 85,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 117.89
+      },
+      {
+        "ts": 90,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.64
+      },
+      {
+        "ts": 95,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 120.95
+      },
+      {
+        "ts": 100,
+        "service": "payment-service",
+        "metric": "latency_p99_ms",
+        "value": 119.52
+      },
+      {
+        "ts": 0,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.28
+      },
+      {
+        "ts": 5,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.71
+      },
+      {
+        "ts": 10,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.81
+      },
+      {
+        "ts": 15,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.87
+      },
+      {
+        "ts": 20,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.56
+      },
+      {
+        "ts": 25,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.67
+      },
+      {
+        "ts": 30,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.86
+      },
+      {
+        "ts": 35,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 82.15
+      },
+      {
+        "ts": 40,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.75
+      },
+      {
+        "ts": 45,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.6
+      },
+      {
+        "ts": 50,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.77
+      },
+      {
+        "ts": 55,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.88
+      },
+      {
+        "ts": 60,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.48
+      },
+      {
+        "ts": 65,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.17
+      },
+      {
+        "ts": 70,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.48
+      },
+      {
+        "ts": 75,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 81.99
+      },
+      {
+        "ts": 80,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.59
+      },
+      {
+        "ts": 85,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.16
+      },
+      {
+        "ts": 90,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 82.28
+      },
+      {
+        "ts": 95,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 80.13
+      },
+      {
+        "ts": 100,
+        "service": "recommendation-service",
+        "metric": "latency_p99_ms",
+        "value": 79.51
+      },
+      {
+        "ts": 0,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.92
+      },
+      {
+        "ts": 5,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.93
+      },
+      {
+        "ts": 10,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.31
+      },
+      {
+        "ts": 15,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.1
+      },
+      {
+        "ts": 20,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.75
+      },
+      {
+        "ts": 25,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.8
+      },
+      {
+        "ts": 30,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.76
+      },
+      {
+        "ts": 35,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.48
+      },
+      {
+        "ts": 40,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.39
+      },
+      {
+        "ts": 45,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.92
+      },
+      {
+        "ts": 50,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.4
+      },
+      {
+        "ts": 55,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.89
+      },
+      {
+        "ts": 60,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 35.34
+      },
+      {
+        "ts": 65,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.41
+      },
+      {
+        "ts": 70,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.82
+      },
+      {
+        "ts": 75,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.25
+      },
+      {
+        "ts": 80,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.96
+      },
+      {
+        "ts": 85,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.43
+      },
+      {
+        "ts": 90,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.12
+      },
+      {
+        "ts": 95,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.77
+      },
+      {
+        "ts": 100,
+        "service": "postgres-primary",
+        "metric": "cpu_pct",
+        "value": 34.27
+      },
+      {
+        "ts": 0,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.83
+      },
+      {
+        "ts": 5,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.01
+      },
+      {
+        "ts": 10,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.53
+      },
+      {
+        "ts": 15,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.96
+      },
+      {
+        "ts": 20,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.3
+      },
+      {
+        "ts": 25,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.51
+      },
+      {
+        "ts": 30,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.54
+      },
+      {
+        "ts": 35,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.22
+      },
+      {
+        "ts": 40,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.84
+      },
+      {
+        "ts": 45,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.39
+      },
+      {
+        "ts": 50,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.3
+      },
+      {
+        "ts": 55,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.8
+      },
+      {
+        "ts": 60,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.75
+      },
+      {
+        "ts": 65,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.88
+      },
+      {
+        "ts": 70,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 94.79
+      },
+      {
+        "ts": 75,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.95
+      },
+      {
+        "ts": 80,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 95.81
+      },
+      {
+        "ts": 85,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.44
+      },
+      {
+        "ts": 90,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 92.68
+      },
+      {
+        "ts": 95,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 93.12
+      },
+      {
+        "ts": 100,
+        "service": "redis-cache",
+        "metric": "hit_rate_pct",
+        "value": 96.65
+      }
+    ],
+    "deployments": [
+      {
+        "ts": 40,
+        "service": "checkout-api",
+        "type": "deploy",
+        "version": "v-40",
+        "description": "Replace checkout request parser"
+      }
+    ],
+    "past_incidents": []
+  },
+  "failures": {
+    "seed": 102
+  }
+}

@@ -143,7 +143,6 @@ provider failures converted into fallback reports.
 
 | Priority | Change | Why it helps | Trade-off |
 | --- | --- | --- | --- |
-| 1 | Record provider failures centrally and distinguish completed, blocked, timed-out, and model-error runs | Prevents infrastructure outages from being mistaken for reasoning failures | Requires additional run-status tracking and explicit benchmark denominators |
 | 1 | Add a shared request/token limiter and respect provider retry delays within the global deadline | Reduces bursts and repeated 429 failures; coordinates requests across agents | Adds waiting time and may reduce parallelism |
 | 1 | Replace Critic failure's `approve` fallback with `review_unavailable` and preserve that status in Reporting | Prevents failed review from being labeled approval | More runs may correctly remain inconclusive |
 | 2 | Enforce evidence sufficiency and unresolved critical-review issues before a conclusive report | Confidence alone cannot establish a cause | Conservative checks can lower completion or conclusive-answer rates |
@@ -152,13 +151,74 @@ provider failures converted into fallback reports.
 | 2 | Reserve a reporting budget and checkpoint hypotheses during investigation | Produces a useful partial report before the global deadline | Leaves less time for evidence collection and requires persistence logic |
 | 2 | Validate the full task plan before scheduling: schemas, dependency references, cycles, and parameters | Current planning can silently drop forward dependency references | Additional validation and plan-repair code |
 | 2 | Add human-reviewed claim-to-evidence labels or an independent grounding evaluator | Measures whether evidence supports claims rather than just whether IDs exist | Human review costs time; an LLM judge adds cost and can introduce bias |
-| 3 | Move mutable multi-agent run state into a per-investigation context and persist checkpoints | Supports concurrent incidents and recovery | More storage, coordination, and cleanup complexity |
 
 For token accounting, record usage at each provider response, including malformed
 outputs, and mark unknown usage on requests canceled before usage arrives. Do not
 present missing usage as verified zero consumption. For evidence, retain tool/query
 provenance and raw-result references in both architectures so semantic review is
 equally possible.
+
+## Assigning different LLMs to different agents
+
+The multi-agent architecture can use a different model for each role. This is a
+proposed extension: the current Orchestrator passes the same `self.llm` client to
+all agents. Model selection should follow measured task performance, rather than
+assuming every role needs the largest model.
+
+| Agent | Model characteristics to prioritize | Reason |
+| --- | --- | --- |
+| Orchestrator | Reliable structured output and planning | Produces valid tasks, parameters, and dependencies |
+| Observability | Fast interpretation of logs and numerical telemetry | Processes repeated evidence-gathering tasks efficiently |
+| Dependency | Understanding of service relationships and change timelines | Connects topology, deployments, configuration changes, and historical clues |
+| Reasoning | Strong causal reasoning and comparison of alternatives | Weighs timing, support, contradictions, and competing hypotheses |
+| Critic | Strong skeptical review and contradiction detection | Identifies unsupported assumptions and useful follow-up investigations |
+| Reporting | Accurate summarization and clear writing | Communicates findings without overstating certainty |
+
+A possible implementation would accept a role-to-client mapping:
+
+```python
+# Illustrative configuration; these client variables must first be initialized.
+llms = {
+    "orchestrator": planning_llm,
+    "observability": telemetry_llm,
+    "dependency": dependency_llm,
+    "reasoning": reasoning_llm,
+    "critic": critic_llm,
+    "reporting": reporting_llm,
+}
+
+# After adapting Orchestrator to accept the mapping:
+observability = ObservabilityAgent(llms["observability"], state, toolbox)
+reasoner = ReasoningAgent(llms["reasoning"], state)
+critic = CriticAgent(llms["critic"], state)
+```
+
+Each adapter must implement `await llm.json(role, payload)` and return the same
+structured contracts. Planning must use the Orchestrator client; Reporting and
+Dependency must also receive their mapped clients. Sharing a client across some
+roles remains valid. Configure model IDs and credentials outside agent logic.
+
+Usage accounting must change with this extension. `_stats()` currently reads
+one client's counters; it should calculate per-investigation usage across distinct
+clients and avoid counting shared clients more than once. Record role-specific
+usage separately if required, and retain provider/model identifiers in experiment
+metadata. Apply request limits per provider or shared quota, plus an overall
+investigation budget, so additional clients do not bypass execution limits.
+
+| Potential benefit | Trade-off |
+| --- | --- |
+| Smaller models can reduce cost and latency for simpler roles | Weaker extraction or planning can introduce errors before reasoning starts |
+| Stronger models can focus on Reasoning and Critic tasks | Those stages may still dominate cost and latency |
+| Different models may reduce shared failure patterns | Different models do not guarantee independent reasoning or correct review |
+| Multiple providers offer deployment flexibility | Authentication, quotas, output formats, retries, and availability become more complex |
+| Models can be tuned to each role | More combinations must be evaluated and maintained |
+
+For comparison, keep the existing same-model experiment as the architecture
+baseline. Evaluate role-specific model selection as a separate mixed-model
+experiment using the same incidents and comparable resource budgets. Any score
+change then reflects both model selection and architecture; it cannot be attributed
+to agent coordination alone. Report quality, latency, tokens, and provider-specific
+costs separately, since equal token counts need not imply equal monetary cost.
 
 ## Reproduce the comparison
 
